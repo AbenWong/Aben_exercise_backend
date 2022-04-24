@@ -1,0 +1,594 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>个人信息</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="/Root/vendors/jqvmap/dist/jqvmap.min.css">
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+</head>
+
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" >用户端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/user/gouserMtpage"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>我加入的社团</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/searchMySt">社团列表</a></li>
+                        <li><i class="menu-icon fa fa-area-chart"></i><a href="/userSt/showMyJoinStperson">社团成员及留言</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>活动系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showUserActive">参与活动</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/searchMySinginupActive">我参加的活动</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>公告系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showAccountmessage">查看公告</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>加入社团</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/ApplicationJoinSt">发起申请</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showMyapplication">我的申请</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>财务系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-fort-awesome"></i><a href="/userSt/showMyorder">未支付订单</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userSt/showMyoldorder">所有订单</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userSt/showMyaccount">个人账户中心</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+                    <div class="dropdown for-notification">
+
+                    </div>
+
+                    <div class="dropdown for-message">
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="user-area dropdown float-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="user-avatar rounded-circle" src="/Root/images/admin.jpg" alt="User Avatar">
+                    </a>
+                    <div class="user-menu dropdown-menu">
+                        <a class="nav-link" href="/userSt/showMyinf"><i class="fa fa-user"></i> 个人信息修改</a>
+
+                        <a class="nav-link" href="/user/login"><i class="fa fa-power-off"></i> 退出系统</a>
+                    </div>
+                </div>
+
+                <div class="language-select dropdown" id="language-select">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+                        <i class="flag-icon flag-icon-us"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="language">
+                        <div class="dropdown-item">
+                            <span class="flag-icon flag-icon-fr"></span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-es"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-us"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-it"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>个人信息</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+
+            <section class="card">
+                <div class="twt-feed blue-bg">
+                    <div class="corner-ribon black-ribon">
+                        <i class="fa fa-twitter"></i>
+                    </div>
+                    <div class="fa fa-twitter wtt-mark"></div>
+
+                    <div class="media">
+                        <a href="#">
+                            <img th:if="${stinf.userPhoto.equals(' ')}" class="align-self-center rounded-circle mr-3" style="width:85px; height:85px;" alt="" th:src="${stinf.userPhoto}">
+                            <img th:if="${!stinf.userPhoto.equals(' ')}" class="align-self-center rounded-circle mr-3" style="width:85px; height:85px;" alt="" th:src="${stinf.userPhoto}" >
+
+                        </a>
+                        <div class="media-body">
+                            <h2 class="text-white display-6" th:text="${stinf.studentinf.studentName}" ></h2>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <hr>
+                <button class="btn btn-outline-primary btn-lg btn-block" id="changeTelNum" th:value="${stinf.userTel}" >修改绑定的手机号</button>
+                <button class="btn btn-outline-success btn-lg btn-block" id="changePassword" th:value="${stinf.userStid}" >修改密码</button>
+                <form action="/fileservice/uploadfile" id="uploadfile" method="post" enctype="multipart/form-data" >
+                <input type="file" accept="image/jpeg" id="picfile" class="btn btn-outline-secondary btn-lg btn-block" name="file" value="上传头像" ></input>
+                </form>
+                <input type="button" id="filesubmit" class="btn btn-outline-secondary btn-lg btn-block" value="上传" >
+
+                <hr>
+            </section>
+        </div>
+
+
+
+        <!-- .animated -->
+    </div><!-- .content -->
+<div id="telLoginlayer" style="display: none;margin: 0 auto " >
+    <form action="/user/telLogin" id="telLoginform" >
+        <input type="text" id="inputText" name="telNum" class="showtext" placeholder="请输入手机号" value="" />
+        <font color="red" id="flag"></font>
+        <br>
+        <input type="text" id="YZcode" name="telCode" class="showtext"  value="" />
+        <input type="button" id="checkbutton" value="获取验证码" disabled="disabled" align="left" class="showbutton" />
+        <br><font color="red" id="msgflag"></font>
+    </form>
+</div>
+<div id="changeTelnumlayer" style="display: none" >
+    <input type="text" id="changeCodeTel" name="telNum" class="showtext" placeholder="请输入验证码" value="" />
+    <font color="red" id="changeTelFlag" ></font>
+
+</div>
+<input type="hidden" th:value="${stinf.userPassword}" id="password" >
+<div style="display: none" align="center" id="newpasswordLayer" >
+    <div class="card-header">
+        <strong>输入密码</strong>
+    </div>
+    <div class="card-body card-block">
+
+        <div class="row form-group">
+            <div class="col col-md-3"><label for="one-password" class=" form-control-label">请输入密码</label></div>
+            <div class="col-12 col-md-9"><input type="password" id="one-password" name="hf-password" placeholder="请输入密码" class="form-control"></div>
+
+
+
+        </div>
+            <div class="row form-group">
+                <div class="col col-md-3"><label for="two-password" class=" form-control-label">再次输入密码</label></div>
+                <div class="col-12 col-md-9"><input type="password" id="two-password" name="hf-password" placeholder="再次输入密码" class="form-control"></div>
+            </div>
+        <font color="red" id="layerflage" ></font>
+        <div class="row form-group" >
+
+    </div>
+</div>
+<style>
+    .showbutton {
+        background-color: #969696;
+        border: none;
+        color: white;
+        padding: 10px 27px;
+        text-decoration: none;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .showtext {
+        width: 40%;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+    }
+</style>
+
+
+    <!-- Right Panel -->
+
+    <script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/Root/assets/js/main.js"></script>
+
+
+    <script src="/Root/vendors/chart.js/dist/Chart.bundle.min.js"></script>
+    <script src="/Root/assets/js/dashboard.js"></script>
+    <script src="/Root/assets/js/widgets.js"></script>
+    <script src="/Root/vendors/jqvmap/dist/jquery.vmap.min.js"></script>
+    <script src="/Root/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <script src="/Root/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+
+    <script type="text/javascript" src="/myjs/jquery.js" ></script>
+    <script type="text/javascript" src="/layer/layer.js"></script>
+    <script type="text/javascript">
+
+    </script>
+    <script>
+        $(function () {
+            $("#filesubmit").click(function () {
+                if($("#picfile").val()==null||$("#picfile").val()==""){
+                    layer.msg("请选择文件");
+                }else {
+                    $("#uploadfile").submit();
+                }
+            })
+        })
+    </script>
+<script type="text/javascript">
+    $("#changeTelNum").click(function () {
+        var index = layer.load(0, {shade: false});
+        var telNum=$("#changeTelNum").val();
+        var weihao=telNum.substr(telNum.length-4);
+        $.ajax({
+            url : "/userSt/changeTelSendCode", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "telNum" : telNum
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                if(date==1){
+                    layer.close(index);
+                    var index2 = layer.open({            //打开layer弹出框
+                        type: 1,    //皮肤类型，在skin文件夹中
+                        area: ["600px", "200px"],    //范围大小
+                        title: "我们向尾号为"+weihao+"的手机发送了一条验证码",               //定义标题
+                        content:$("#changeTelnumlayer"),       //输出的字符串，定义弹出框的html页面
+                        btn: ['确定', '取消'],　　　　//按钮
+                        yes: function (index, layero) { //确定按钮的处理函数
+                            var changeCodeTel = $("#changeCodeTel").val();
+                            $.ajax({
+                                url: "/userSt/changeTel", //请求的url地址
+                                ataType: "json", //返回格式为json
+                                async: true,
+                                data: {
+                                    "code": changeCodeTel
+                                }, //参数值
+                                type: "post", //请求方式
+                                success: function (date) {
+                                    if(date==1){
+                                        $("#msgflag").html(" ");
+                                        var index2 = layer.open({            //打开layer弹出框
+                                            type: 1,    //皮肤类型，在skin文件夹中
+                                            area: ["600px", "300px"],    //范围大小
+                                            title: "向新的手机号发送验证码",               //定义标题
+                                            content:$("#telLoginlayer"),       //输出的字符串，定义弹出框的html页面
+                                            btn: ['确定', '取消'],　　　　//按钮
+                                            yes: function (index, layero) { //确定按钮的处理函数
+                                                var telNum=$("#inputText").val();
+                                                var telCode=$("#YZcode").val();
+                                                $.ajax({
+                                                    url : "/userSt/changeTel", //请求的url地址
+                                                    dataType : "json", //返回格式为json
+                                                    async : true,
+                                                    data : {
+                                                        "code": telCode
+                                                    }, //参数值
+                                                    type : "post", //请求方式
+                                                    success : function(date) {
+                                                        if(date==1){
+                                                            $.ajax({
+                                                                url : "/userSt/setNewTelsendCode", //请求的url地址
+                                                                dataType : "json", //返回格式为json
+                                                                async : true,
+                                                                data : {
+                                                                    "newtel": telNum
+                                                                }, //参数值
+                                                                type : "post", //请求方式
+                                                                success : function(date) {
+                                                                    if(date.msg == 1){
+                                                                        layer.msg("修改成功");
+                                                                        layer.close(index2);
+                                                                    }
+                                                                    if(date.msg == 101){
+                                                                        $("#msgflag").html("修改失败此手机号已经注册过其他账户")
+
+                                                                    }
+
+
+                                                                }
+                                                            });
+                                                        }else {
+                                                            $("#msgflag").html("验证码错误")
+                                                        }
+
+
+                                                    }
+                                                });
+
+
+                                            },
+                                            btn2: function (index, layero) { //取消按钮后的处理函数
+                                                layer.close(index);
+                                                layer.close(index2);
+                                            },
+                                        });
+                                        layer.close(index);
+                                    }
+                                    if (date == 2) {
+                                        $("#changeTelFlag").html("验证码错误")
+                                    }
+
+                                }
+                            });
+
+
+                        },
+                        btn2: function (index, layero) { //取消按钮后的处理函数
+                            layer.close(index2);
+                        },
+                    });
+
+                }else {
+                    layer.close(index);
+                    layer.msg("网络错误或您今天发送太多短信")
+                }
+
+
+            }
+        });
+
+
+    })
+</script>
+<script type="application/javascript">
+    //设置每隔0.1秒执行一次
+    $(function() {
+        getTelNum();
+        $("#checkbutton").click(function() {
+            getCaptcha();
+        })
+    })
+    //获取电话号方法
+    function getTelNum() {
+        var telNum = $("#inputText").val();
+        if (telNum != "") {
+            $("#flag").attr("color", "red");
+            $("#checkbutton").attr("disabled", "disabled");
+            $("#checkbutton").css("background-color", "#969696");
+            if (checkTelNum(telNum)) {
+                $("#flag").attr("color", "green");
+                $("#flag").html("输入正确");
+                $("#checkbutton").removeAttr("disabled");
+                $("#checkbutton").css("background-color", "#4CAF50");
+
+            } else {
+                $("#flag").html("请输入正确的手机号");
+            }
+        }
+        checkinputTime = setTimeout(function() {
+            getTelNum();
+        }, 100);
+    }
+    //判断方法
+    function checkTelNum(telNum) {
+        var myreg = /^[1][3,4,5,6,7,8][0-9]{9}$/;
+        if (!myreg.test(telNum)) {
+
+            return false;
+        } else {
+
+            return true;
+        }
+    }
+    //获取验证码并且倒计时
+    function getCaptcha() {
+        clearInterval(checkinputTime); //停止获取手机号计时器
+        var telNum = $("#inputText").val();
+        $.ajax({
+            url : "/userSt/changeTelSendCode", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "telNum" : telNum
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                $("#msgflag").html(" ");
+                if(date=="2"){
+                    $("#msgflag").html("今天已经使用过太多验证码");
+                }
+
+            }
+        });
+        $("#checkbutton").attr("disabled", "disabled");
+        $("#checkbutton").css("background-color", "#969696");
+
+        timeOut(60);
+    }
+    //随机数
+    function randomn(n) {
+        if (n > 21) return null
+        return parseInt((Math.random() + 1) * Math.pow(10, n - 1))
+    }
+    //五秒倒计时
+    function timeOut(time) {
+        $("#checkbutton").attr("value", time + "秒后重新获取");
+
+        time = time - 1;
+        checkCaptcha = setTimeout(function() {
+            timeOut(time);
+        }, 1000);
+        if (time == 0) {
+            clearInterval(checkCaptcha);
+            $("#checkbutton").removeAttr("disabled");
+            $("#checkbutton").val("获取验证码");
+            $("#checkbutton").css("background-color", "#4CAF50");
+            getTelNum();
+        }
+    }
+</script>
+<script type="text/javascript" >
+    $("#changePassword").click(this,function () {
+        changePassword(this);
+    });
+    function changePassword(dom) {
+        var userKey=$(dom).val();
+        var password=$("#password").val();
+        var index1=layer.prompt({title: '输入旧的密码，并确认', formType: 1}, function(pass1, index){
+            if(password==pass1){
+                layer.close(index1);
+                var index = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["600px", "400px"],    //范围大小
+                    title: "输入新的密码",               //定义标题
+                    content:$('#newpasswordLayer'),       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var onePassword=$("#one-password").val();
+                        var twoPassword=$("#two-password").val();
+                        if(onePassword==twoPassword){
+                           var index2= layer.confirm('您确认修改密码吗？', {
+                                btn: ['确定','取消'] //按钮
+                            }, function(){
+                               $.ajax({
+                                   url : "/userSt/changePassword", //请求的url地址
+                                   dataType : "json", //返回格式为json
+                                   async : true,
+                                   data : {
+                                       "newPassword": twoPassword
+                                   }, //参数值
+                                   type : "post", //请求方式
+                                   success : function(date) {
+                                       if(date.msg == 1){
+                                           layer.msg("修改成功 三秒后 请重新登录");
+                                           setTimeout(func,"3000");
+                                           function func()
+                                           {
+
+                                               window.location.href="/user/login";
+
+                                           }
+                                       }else {
+                                           layer.msg("修改失败 网络错误");
+                                       }
+
+
+                                   }
+                               });
+                            }, function(){
+                                layer.close(index);
+                               layer.close(index2);
+                            });
+                        }else {
+                            $("#layerflage").html("两次输入的密码不一样")
+                        }
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                    },
+                });
+            }
+            else {
+                layer.msg("密码错误");
+            }
+        });
+    }
+    function checkPassword(dom) {
+        var onepassword=$(dom).val();
+    }
+</script>
+
+
+    <script>
+        (function($) {
+            "use strict";
+
+            jQuery('#vmap').vectorMap({
+                map: 'world_en',
+                backgroundColor: null,
+                color: '#ffffff',
+                hoverOpacity: 0.7,
+                selectedColor: '#1de9b6',
+                enableZoom: true,
+                showTooltip: true,
+                values: sample_data,
+                scaleColors: ['#1de9b6', '#03a9f5'],
+                normalizeFunction: 'polynomial'
+            });
+        })(jQuery);
+    </script>
+
+</body>
+
+</html>

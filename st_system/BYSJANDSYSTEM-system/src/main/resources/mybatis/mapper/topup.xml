@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.topupDao">
+    <insert id="addmoney">
+        insert into topup(topup_key, topup_money, topup_time, topup_person)
+        value (#{topupKey},#{topupmoney},sysdate(),#{topupperson})
+    </insert>
+    <select id="findtopupList" resultType="com.bysj.stsys.model.Topup">
+        SELECT
+            topup.TOPUP_MONEY,
+            topup.TOPUP_TIME,
+            topup.TOPUP_KEY
+        FROM
+            topup
+        where TOPUP_PERSON=#{userKey}
+        order by TOPUP_TIME DESC
+    </select>
+</mapper>

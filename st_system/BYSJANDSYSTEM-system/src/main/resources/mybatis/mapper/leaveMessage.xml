@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.leaveMessageDao">
+    <insert id="addLeaveMessage" parameterType="com.bysj.stsys.model.Leavemessage">
+        insert into leavemessage (LM_KEY, LM_SENDPERSON, LM_RECEIVERPERSON, LM_TITLE, LM_MESSAGE, LM_CREATETIME)
+        values (#{lmKey},#{lmSendperson},#{lmReceiverperson},#{lmTitle},#{lmMessage},sysdate());
+    </insert>
+    <resultMap id="showMyleaveessage" type="com.bysj.stsys.model.Leavemessage">
+        <result property="lmKey" column="LM_KEY"/>
+        <result property="lmSendperson" column="LM_SENDPERSON"/>
+        <result property="lmTitle" column="LM_TITLE"/>
+        <result property="lmMessage" column="LM_MESSAGE"/>
+        <result property="lmCreatetime" column="LM_CREATETIME"/>
+        <result property="lmStatue" column="LM_STATUE"/>
+        <association property="user" javaType="com.bysj.stsys.model.User">
+            <result property="userStid" column="USER_STID"/>
+            <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+                <result property="studentName" column="STUDENT_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="findmymessageshowMyleaveessage" resultMap="showMyleaveessage" >
+        SELECT
+            leavemessage.LM_KEY,
+            leavemessage.LM_SENDPERSON,
+            leavemessage.LM_TITLE,
+            leavemessage.LM_MESSAGE,
+            leavemessage.LM_CREATETIME,
+            leavemessage.LM_STATUE,
+            `user`.USER_STID,
+            studentinf.STUDENT_NAME
+        FROM
+            leavemessage
+                INNER JOIN `user` ON leavemessage.LM_SENDPERSON = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where LM_RECEIVERPERSON=#{userKey} and leavemessage.LM_STATUE=1
+        ORDER BY LM_CREATETIME desc
+
+    </select>
+    <update id="updateleaveStatue">
+        update leavemessage set leavemessage.LM_STATUE=2 where leavemessage.LM_KEY=#{leavemessageKey}
+    </update>
+</mapper>

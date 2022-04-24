@@ -1,0 +1,313 @@
+<!doctype html>
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sufee Admin - HTML5 Admin Template</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/Root/apple-icon.png">
+    <link rel="shortcut icon" href="/Root/favicon.ico">
+
+
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+
+</head>
+
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" >管理员端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/goroot"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>社团信息管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_stList">查看社团</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_StkingList">社团分类管理</a></li>
+
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/chengliSt">新增社团</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>活动管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-th"></i><a href="/stlnf/jumptoStactivepage">活动信息</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-area-chart"></i>公告系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-map-o"></i><a href="/stlnf/jumptoAnnouncePage">管理员公告管理</a></li>
+                        <li><i class="menu-icon fa fa-street-view"></i><a href="/stlnf/addaccouncement">公告发布</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+                    <div class="dropdown for-notification">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="notification">
+
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown for-message">
+
+                        <div class="dropdown-menu" aria-labelledby="message">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="user-area dropdown float-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="user-avatar rounded-circle" src="../Root/images/admin.jpg" alt="User Avatar">
+                    </a>
+
+                    <div class="user-menu dropdown-menu">
+
+                        <a class="nav-link" href="/login"><i class="fa fa-power-off"></i> 退出</a>
+                    </div>
+                </div>
+
+                <div class="language-select dropdown" id="language-select">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+                        <i class="flag-icon flag-icon-us"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="language">
+                        <div class="dropdown-item">
+                            <span class="flag-icon flag-icon-fr"></span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-es"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-us"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-it"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>管理员查看</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">管理员信息</strong>
+
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+
+                                    <th>管理员用户名</th>
+                                    <th>管理员密码</th>
+                                   <th>管理员人脸库照片</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${session.rootinf.usernumber}" ></td>
+                                    <td>
+                                        <button type="button" onclick="changepassword(this)" th:value="${session.rootinf.userpassword}" th:placeholder="${session.rootinf.userkey}" class="btn btn-primary btn-sm">修改密码</button>
+                                    </td>
+                                    <td>
+                                        <img src="../Root/images/admin2.jpg" alt="User Avatar" style="width: 195px;height: 284px">
+                                    </td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+
+
+</div><!-- /#right-panel -->
+
+</div><!-- /#right-panel -->
+<!--修改社团名称的弹出层-->
+<div id="layerDom" style="display: none;  margin: 0 auto " >
+    <input type="text" class="form-control" placeholder="请输入新的社团名称" id="newStName" >
+</div>
+<!--修改社团类别的弹出层-->
+<div id="layerDomChangeStKind" style="display:none; margin: 0 auto " >
+    <div align="center" >
+        <select id="stKind" style=" margin: 0 auto" >
+
+        </select>
+    </div>
+
+</div>
+<!--修改备注的弹出层-->
+<div id="layerDomChangeStIntf" style="display: none; margin: 0 auto" >
+    <textarea role="100" cols="34" value="" id="changeStIntf" style="height: 250px;" ></textarea>
+</div>
+<div style="display: none" id="layerShowpersonList" >
+    <div class="card-body">
+        <h4 align="center"></h4>
+        <hr>
+
+        <table class="table table-striped table-bordered">
+
+            <thead align="center" >
+            <th>学号</th>
+            <th>姓名</th>
+            <th>备注</th>
+            </thead>
+
+            <tbody id="personList" align="center" >
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+
+<script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+<script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/Root/assets/js/main.js"></script>
+<script type="text/javascript" src="/myjs/jquery.js" ></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<script type="text/javascript">
+   function changepassword(dom) {
+       var oldpassword=$(dom).val();
+       var rootuserkey=$(dom).attr('placeholder');
+      layer.prompt({title: '输入原密码', formType: 1}, function(pass, index){
+           if(oldpassword==pass){
+               layer.msg("密码正确");
+               layer.prompt({title: '输入新密码', formType: 1}, function(pass1, index2){
+                   layer.close(index2);
+                   layer.prompt({title: '再次输入新密码', formType: 1}, function(pass2, index3){
+                       layer.close(index3);
+                       if(pass2==pass1){
+                           $.ajax({
+                               url : "/stlnf/updatepassword", //请求的url地址
+                               dataType : "json", //返回格式为json
+                               async : true,
+                               data : {
+                                   "newpassword" : pass2,
+                                   "userkey" : rootuserkey
+                               }, //参数值
+                               type : "post", //请求方式
+                               success : function(date) {
+                                   if(date==1){
+                                       alert("修改成功重新登陆");
+                                       window.location.href="/gologinpage";
+                                   }else {
+                                       layer.msg("修改失败");
+
+                                   }
+
+                               }
+                           });
+                       }
+                   });
+               });
+           }else {
+               layer.msg("密码错误");
+               layer.close(index);
+           }
+
+
+       });
+
+
+   }
+</script>
+
+
+</body>
+
+</html>

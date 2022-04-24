@@ -1,0 +1,601 @@
+<!doctype html>
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sufee Admin - HTML5 Admin Template</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/Root/apple-icon.png">
+    <link rel="shortcut icon" href="/Root/favicon.ico">
+
+
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+
+</head>
+
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" >管理员端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/goroot"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>社团信息管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_stList">查看社团</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_StkingList">社团分类管理</a></li>
+
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/chengliSt">新增社团</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>活动管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-th"></i><a href="/stlnf/jumptoStactivepage">活动信息</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-area-chart"></i>公告系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-map-o"></i><a href="/stlnf/jumptoAnnouncePage">管理员公告管理</a></li>
+                        <li><i class="menu-icon fa fa-street-view"></i><a href="/stlnf/addaccouncement">公告发布</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+                    <div class="dropdown for-notification">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="notification">
+
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown for-message">
+
+                        <div class="dropdown-menu" aria-labelledby="message">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="user-area dropdown float-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="user-avatar rounded-circle" src="../Root/images/admin.jpg" alt="User Avatar">
+                    </a>
+
+                    <div class="user-menu dropdown-menu">
+
+                        <a class="nav-link" href="/login"><i class="fa fa-power-off"></i> 退出</a>
+                    </div>
+                </div>
+
+                <div class="language-select dropdown" id="language-select">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+                        <i class="flag-icon flag-icon-us"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="language">
+                        <div class="dropdown-item">
+                            <span class="flag-icon flag-icon-fr"></span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-es"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-us"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-it"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+
+            <div class="ui-typography">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-header">
+                            <strong class="card-title">社团信息</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" >
+
+                                <tbody>
+                                <tr>
+
+                                    <td>社团名称:</td>
+                                    <td th:text="${stinf.stName}" id="stName" ></td>
+                                    <td><i class="fa fa-pencil-square"><font color="green" id="changeButton">  修改</font></i></td>
+                                </tr>
+                                <tr>
+                                    <td>社团ID</td>
+                                    <td th:text="${stinf.stKey}" id="stKey" ></td>
+                                    <td><i class="fa fa-pencil-square"><font color="#808080" onclick="layer.msg('不可修改')" >  不可修改</font></i></td>
+                                </tr>
+                                <tr>
+                                    <td>社团Logo</td>
+
+                                    <td><img style="width: 200px; height: 200px;" th:src="${stinf.stLogo}" ></td>
+                                    <td>
+                                        <form action="/fileservice/uploadStlogo" id="uploadfile" method="post" enctype="multipart/form-data" >
+                                            <input type="hidden" id="hiddenStkey" name="Stkey" th:value="${stinf.stKey}" >
+                                            <input type="file" accept="image/jpeg" id="picfile" name="file" value="上传头像" ></input>
+                                        </form>
+                                        <button class="btn btn-danger" onclick="shangchuantupian()" type="submit">上传图片</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>社团类别</td>
+                                    <td th:text="${stinf.stkind.stkindName}" id="stKindShow"  ></td>
+                                    <td><i class="fa fa-pencil-square"><font color="green" id="changeStkindButton">  修改</font></i></td>
+                                </tr>
+                                <tr>
+                                    <td>社团负责人</td>
+                                    <td th:text="${stinf.studentinf.studentName+'/'+stinf.presidentid}" >
+                                    </td>
+                                    <td>
+                                        <input type="hidden" th:value="${stinf.presidentid}" id="oldpresidentId" >
+                                        <i class="fa fa-pencil-square"><font color="green" onclick="updateStfuzeren()" >  修改</font></i></td>
+
+                                </tr>
+                                <tr>
+                                    <td>创建时间</td>
+                                    <td th:text="${stinf.stCreatetime}" ></td>
+                                    <td><i class="fa fa-pencil-square"><font color="#808080" onclick="layer.msg('不可修改')" >  不可修改</font></i></td>
+
+                                </tr>
+                                <tr>
+                                    <td>社团状态</td>
+
+                                    <td th:if="${stinf.stStatue.equals('1')}"><span class="badge badge-success">良好运行</span></td>
+                                    <td th:if="${stinf.stStatue.equals('3')}"><span class="badge badge-danger">停用状态</span></td>
+                                    <td th:if="${stinf.stStatue.equals('2')}"><span class="badge badge-warning">注销中</span></td>
+                                    <td>
+                                        <input type="hidden" th:value="${stinf.stStatue}" id="ststatue" >
+                                        <i class="fa fa-pencil-square"><font color="green" onclick="changeStstatue()" >  修改</font></i></td>
+
+                                </tr>
+                                <tr>
+                                    <td>社团简介</td>
+                                    <td>
+                                        <textarea role="100" cols="38" th:value="${stinf.stIntf}"  th:text="${stinf.stIntf}" value="" id="stIntf"  style="height: 100px" readonly="readonly" ></textarea>
+
+                                    </td>
+                                    <td><i class="fa fa-pencil-square"><font color="green" id="changeStintrButton">  修改</font></i></td>
+
+                                </tr>
+                                <tr>
+                                    <td>社团总人数</td>
+                                    <td th:text="${stPeopleNume}+'人'" ></td>
+                                    <td><i class="fa fa-pencil-square"><font color="#808080" onclick="layer.msg('不可修改')" >  不可修改</font></i></td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="/stlnf/search_stList"><button class="btn btn-primary btn-sm" >返回列表</button></a>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div><!-- .animated -->
+    </div><!-- .content -->
+
+
+</div><!-- /#right-panel -->
+<!--修改社团名称的弹出层-->
+<div id="layerDom" style="display: none;  margin: 0 auto " >
+    <input type="text" class="form-control" placeholder="请输入新的社团名称" id="newStName" >
+</div>
+<!--修改社团类别的弹出层-->
+<div id="layerDomChangeStKind" style="display:none; margin: 0 auto " >
+    <div align="center" >
+        <select id="stKind" style=" margin: 0 auto" >
+
+        </select>
+    </div>
+
+</div>
+<!--修改备注的弹出层-->
+<div id="layerDomChangeStIntf" style="display: none; margin: 0 auto" >
+    <textarea role="100" cols="34" value="" id="changeStIntf" style="height: 250px;" ></textarea>
+</div>
+<div style="display: none" id="layerShowpersonList" >
+    <div class="card-body">
+        <h4 align="center"></h4>
+        <hr>
+        <table class="table table-striped table-bordered">
+
+            <thead align="center" >
+            <th>学号</th>
+            <th>姓名</th>
+            <th>备注</th>
+            </thead>
+
+            <tbody id="personList" align="center" >
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+
+<script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+<script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/Root/assets/js/main.js"></script>
+<script type="text/javascript" src="/myjs/jquery.js" ></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#changeButton").click(function () {
+            changeStName();
+        });
+        $("#changeStkindButton").click(function () {
+            changeStKind();
+        });
+        $("#changeStintrButton").click(function () {
+            changeStIntf()
+        })
+    })
+    //修改社团名
+    function changeStName() {
+        var index = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "150px"],    //范围大小
+            title: "输入新的社团名",               //定义标题
+            content:$('#layerDom'),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                    var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["300px", "150px"],    //范围大小
+                    title: "确认提示",               //定义标题
+                    content:"确认修改吗 此操作不可撤回",       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var stKey=$("#stKey").html();
+                        var newStName=$("#newStName").val();
+                        $.ajax({
+                            url : "/stlnf/updateStname", //请求的url地址
+                            dataType : "json", //返回格式为json
+                            async : true,
+                            data : {
+                                "stKey" : stKey,
+                                "newStName" : newStName
+                            }, //参数值
+                            type : "post", //请求方式
+                            success : function(date) {
+                                if(date.msg==1){
+                                    layer.msg("修改成功");
+                                    $("#stName").html($("#newStName").val());
+                                    layer.close(index);
+                                    layer.close(index2);
+
+                                }
+
+                            }
+                        });
+
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                        layer.close(index2);
+                    },
+                });
+                layer.close(index);
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+            },
+        });
+    }
+    //修改社团类别
+    function changeStKind() {
+        //查询社团种类的list
+        $("#stKind").empty();
+        $.ajax({
+            url : "/stlnf/getStKindList", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            type : "post", //请求方式
+            success : function(date) {
+                $(date).each(function () {
+                    $("#stKind").append("<option value='"+this.stkindKey+"' >"+this.stkindName+"</option>");
+                })
+
+            }
+        });
+        var index = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "150px"],    //范围大小
+            title: "选择新的类别",               //定义标题
+            content:$('#layerDomChangeStKind'),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["300px", "150px"],    //范围大小
+                    title: "确认提示",               //定义标题
+                    content:"确认修改吗 此操作不可撤回",       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var stKey=$("#stKey").html();
+                        var newStkind=$("#stKind option:selected").val();
+
+                        $.ajax({
+                            url : "/stlnf/updateStkind", //请求的url地址
+                            dataType : "json", //返回格式为json
+                            async : true,
+                            data : {
+                                "stKey" : stKey,
+                                "newStkind" : newStkind
+                            }, //参数值
+                            type : "post", //请求方式
+                            success : function(date) {
+                                if(date.msg==1){
+                                    layer.msg("修改成功");
+                                    $("#stKindShow").html($("select option[value='"+newStkind+"']").html());
+
+                                    layer.close(index);
+                                    layer.close(index2);
+                                }
+
+                            }
+                        });
+
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                        layer.close(index2);
+                    },
+                });
+                layer.close(index);
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+            },
+        });
+    }
+    //修改社团备注
+    function changeStIntf() {
+        $("#changeStIntf").val("");
+        var oldStintf=$("#stIntf").html();
+        $("#changeStIntf").val(oldStintf);
+        var index = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "310px"],    //范围大小
+            title: "修改备注",               //定义标题
+            content:$('#layerDomChangeStIntf'),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["300px", "160px"],    //范围大小
+                    title: "确认提示",               //定义标题
+                    content:"确认修改吗 此操作不可撤回",       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var stKey=$("#stKey").html();
+                        var newStintf=$("#changeStIntf").val();
+                        $.ajax({
+                            url : "/stlnf/updateStintf", //请求的url地址
+                            dataType : "json", //返回格式为json
+                            async : true,
+                            data : {
+                                "stKey" : stKey,
+                                "newStintf" : newStintf
+                            }, //参数值
+                            type : "post", //请求方式
+                            success : function(date) {
+                                if(date.msg==1){
+                                    layer.msg("修改成功");
+                                    $("#stIntf").html(newStintf);
+                                    layer.close(index);
+                                    layer.close(index2);
+                                }
+
+                            }
+                        });
+
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                        layer.close(index2);
+                    },
+                });
+                layer.close(index);
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+            },
+        });
+    }
+    function shangchuantupian() {
+        var file=$("#picfile").val();
+        if(file==""){
+            layer.msg("请选择图片")
+        }else {
+            //询问框
+
+           var index= layer.confirm('上传图片后会重新加载页面，请保存所有操作', {
+                btn: ['已保存','取消上传'] //按钮
+            }, function(){
+                $("#uploadfile").submit();
+            }, function(){
+                layer.close(index);
+            });
+        }
+    }
+    function updateStfuzeren() {
+        var Stkey=$("#hiddenStkey").val();
+        $("#personList").empty();
+        //查看还有谁
+        $.ajax({
+            url : "/stlnf/showStperson", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "Stkey" : Stkey,
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                $.each(date, function (index, studentinf) {
+                    $("#personList").append('<tr><td>'+studentinf.stpePersonid+'</td><td>'+studentinf.user.studentinf.studentName+'</td><td><button type="button" value="'+studentinf.stpePersonid+'"  onclick="sheweishezhang(this)" class="btn btn-outline-primary btn-sm">设为社长</button></td></tr>')
+
+                });
+                var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["800px", "400px"],    //范围大小
+                    title: "人员列表",               //定义标题
+                    content:$("#layerShowpersonList"),       //输出的字符串，定义弹出框的html页面
+                    btn: ['打印', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        layer.close(index2);
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index2);
+                    },
+                });
+
+            }
+        });
+
+    }
+    function sheweishezhang(dom) {
+        var newStudentId=$(dom).val();
+        var Stkey=$("#stKey").html();
+        var oldStudentId=$("#oldpresidentId").val();
+
+        $.ajax({
+            url : "/stlnf/sheweishezhang", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "newStudentId" : newStudentId,
+                "oldStudentId" : oldStudentId,
+                "Stkey" : Stkey
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                if(date > 0){
+                    location.reload();
+                }else {
+                    layer.msg("修改失败");
+                }
+            }
+        });
+
+
+    }
+    function changeStstatue() {
+        var statue=$("#ststatue").val();
+        var Stkey=$("#stKey").html();
+        $.ajax({
+            url : "/stlnf/updateStstatue", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "Stkey" : Stkey,
+                "statue" : statue
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                if(date > 0){
+                    location.reload();
+                }else {
+                    layer.msg("修改失败");
+                }
+            }
+        });
+    }
+</script>
+
+
+</body>
+
+</html>

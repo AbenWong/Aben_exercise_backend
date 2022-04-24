@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.activePersonDao">
+    <select id="findMyjionactive" resultType="string">
+        SELECT
+            activeperson.AP_ACTIVEKEY
+        FROM
+            activeperson
+        where activeperson.AP_PERSON=#{UserKey} and DEL_FLAG=1
+
+    </select>
+    <select id="findHowManyPeopleJoinActive" resultType="int">
+        SELECT COUNT(*)
+        FROM
+             activeperson
+        where
+            activeperson.AP_ACTIVEKEY=#{acKey} and DEL_FLAG=1
+    </select>
+    <insert id="singInUp">
+        insert into activeperson (AP_KEY, AP_PERSON, AP_ACTIVEKEY, AP_TIME)
+        values (#{apKey},#{userKey},#{acKey},sysdate());
+    </insert>
+    <resultMap id="findActive" type="com.bysj.stsys.model.Activeperson">
+        <id property="apKey" column="AP_KEY"/>
+        <result property="apPerson" column="AP_PERSON"/>
+        <result property="apActivekey" column="AP_ACTIVEKEY"/>
+        <result property="apTime" column="AP_TIME"/>
+        <association property="active" javaType="com.bysj.stsys.model.Active">
+            <result property="acKEy" column="AC_kEY"/>
+            <result property="acTitle" column="AC_TITLE"/>
+            <result property="acDate" column="AC_DATE"/>
+            <result property="acStatue" column="AC_STATUE"/>
+        </association>
+    </resultMap>
+    <select id="findMyjoinactiveList" resultMap="findActive">
+        SELECT
+            active.AC_TITLE,
+            activeperson.AP_KEY,
+            activeperson.AP_PERSON,
+            activeperson.AP_ACTIVEKEY,
+            activeperson.AP_TIME,
+            activeperson.DEL_FLAG,
+            active.AC_kEY,
+            active.AC_DATE,
+            active.AC_STATUE
+        FROM
+            activeperson
+                INNER JOIN active ON activeperson.AP_ACTIVEKEY = active.AC_kEY
+        WHERE
+            activeperson.AP_PERSON = #{userKey} AND active.AC_STATUE=2 AND activeperson.DEL_FLAG=1
+        ORDER BY active.AC_DATE
+
+
+    </select>
+    <update id="delSinginUp">
+        update activeperson set DEL_FLAG=2 where AP_PERSON=#{userKey} and AP_ACTIVEKEY=#{acKey}
+    </update>
+    <resultMap id="searchPeopleInf" type="com.bysj.stsys.model.Activeperson">
+        <result property="apKey" column="AP_KEY"/>
+        <result property="apActivekey" column="AP_ACTIVEKEY"/>
+        <association property="user" javaType="com.bysj.stsys.model.User">
+            <result property="userStid" column="USER_STID"/>
+            <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+                <result property="studentName" column="STUDENT_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="searchActivePeopleInf" resultMap="searchPeopleInf">
+        SELECT
+            activeperson.AP_KEY,
+            `user`.USER_STID,
+            studentinf.STUDENT_NAME,
+            activeperson.AP_ACTIVEKEY
+        FROM
+            activeperson
+                INNER JOIN `user` ON activeperson.AP_PERSON = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where AP_ACTIVEKEY=#{acKey} and activeperson.DEL_FLAG=1
+
+
+    </select>
+</mapper>

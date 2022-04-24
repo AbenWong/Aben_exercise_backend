@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.joinStapplicationDao">
+    <insert id="addJoinapplication">
+        INSERT INTO joinstapplication(APPLICATION_KEY, APPLICATION_PERSON, APPLICATION_STKEY, APPLICATION_INTRODUCTION, APPLICATION_MESSAGE, APPLICATION_STATUE, APPLICATION_TIME)
+         VALUES(#{apkey},#{userkey},#{stkey},#{myinf},#{myreason},1,sysdate())
+    </insert>
+    <resultMap id="searchMyapplicateInf" type="com.bysj.stsys.model.Joinstapplication">
+        <id property="applicationKey" column="APPLICATION_KEY"/>
+        <result property="applicationPerson" column="APPLICATION_PERSON"/>
+        <result property="applicationStkey" column="APPLICATION_STKEY"/>
+        <result property="applicationTime" column="APPLICATION_TIME"/>
+        <result property="applicationStatue" column="APPLICATION_STATUE"/>
+        <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+            <result property="stName" column="ST_NAME"/>
+        </association>
+    </resultMap>
+    <select id="showMyapplicate" resultMap="searchMyapplicateInf">
+        SELECT
+            joinstapplication.APPLICATION_KEY,
+            joinstapplication.APPLICATION_PERSON,
+            joinstapplication.APPLICATION_STKEY,
+            joinstapplication.APPLICATION_TIME,
+            joinstapplication.APPLICATION_FLAG,
+            joinstapplication.APPLICATION_STATUE,
+
+            stinf.ST_NAME
+        FROM
+            joinstapplication
+                INNER JOIN stinf ON joinstapplication.APPLICATION_STKEY = stinf.ST_KEY
+            where APPLICATION_PERSON=#{userKey}
+    </select>
+    <select id="showMyapplicationInf" resultType="com.bysj.stsys.model.Joinstapplication">
+        select * from joinstapplication where APPLICATION_KEY=#{Ank}
+    </select>
+    <resultMap id="searchDealWith" type="com.bysj.stsys.model.Joinstapplication">
+        <result property="applicationKey" column="APPLICATION_KEY"/>
+        <result property="applicationPerson" column="APPLICATION_PERSON"/>
+        <result property="applicationStkey" column="APPLICATION_STKEY"/>
+        <result property="applicationIntroduction" column="APPLICATION_INTRODUCTION"/>
+        <result property="applicationMessage" column="APPLICATION_MESSAGE"/>
+        <result property="applicationStatue" column="APPLICATION_STATUE"/>
+        <result property="applicationTime" column="APPLICATION_TIME"/>
+        <result property="applicationFlag" column="APPLICATION_FLAG"/>
+        <association property="user" javaType="com.bysj.stsys.model.User">
+            <result property="userStid" column="USER_STID"/>
+            <result property="userTel" column="USER_TEL"/>
+            <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+                <result property="studentName" column="STUDENT_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="dealWithJoinApplication" resultMap="searchDealWith" >
+        SELECT
+            joinstapplication.APPLICATION_KEY,
+            joinstapplication.APPLICATION_PERSON,
+            joinstapplication.APPLICATION_STKEY,
+            joinstapplication.APPLICATION_INTRODUCTION,
+            joinstapplication.APPLICATION_MESSAGE,
+            joinstapplication.APPLICATION_STATUE,
+            joinstapplication.APPLICATION_TIME,
+            joinstapplication.APPLICATION_FLAG,
+            studentinf.STUDENT_NAME,
+            `user`.USER_STID,
+            `user`.USER_TEL
+        FROM
+            joinstapplication
+                INNER JOIN `user` ON joinstapplication.APPLICATION_PERSON = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where APPLICATION_STKEY=#{stKey} and APPLICATION_STATUE=1
+
+    </select>
+    <select id="dealWithJoinApplicationresoult" resultMap="searchDealWith" >
+        SELECT
+            joinstapplication.APPLICATION_KEY,
+            joinstapplication.APPLICATION_PERSON,
+            joinstapplication.APPLICATION_STKEY,
+            joinstapplication.APPLICATION_INTRODUCTION,
+            joinstapplication.APPLICATION_MESSAGE,
+            joinstapplication.APPLICATION_STATUE,
+            joinstapplication.APPLICATION_TIME,
+            joinstapplication.APPLICATION_FLAG,
+            studentinf.STUDENT_NAME,
+            `user`.USER_STID,
+            `user`.USER_TEL
+        FROM
+            joinstapplication
+                INNER JOIN `user` ON joinstapplication.APPLICATION_PERSON = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where APPLICATION_STKEY=#{stKey} and APPLICATION_STATUE in (2,3)
+
+    </select>
+    <update id="refuseapplication">
+        update joinstapplication set APPLICATION_STATUE=3,APPLICATION_FLAG=#{reason} where APPLICATION_KEY=#{applicationKey}
+    </update>
+    <update id="agreeApplication">
+        update joinstapplication set APPLICATION_STATUE=2 where APPLICATION_KEY=#{applicationKey}
+
+    </update>
+</mapper>

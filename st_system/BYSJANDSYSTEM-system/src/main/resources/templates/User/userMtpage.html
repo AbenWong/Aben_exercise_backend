@@ -1,0 +1,324 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>主页</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="/Root/vendors/jqvmap/dist/jqvmap.min.css">
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+    <script type="text/javascript" src="/myjs/jquery.js" ></script>
+    <script type="text/javascript" src="/layer/layer.js"></script>
+</head>
+
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" >用户端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/user/gouserMtpage"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>我加入的社团</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/searchMySt">社团列表</a></li>
+                        <li><i class="menu-icon fa fa-area-chart"></i><a href="/userSt/showMyJoinStperson">社团成员及留言</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>活动系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showUserActive">参与活动</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/searchMySinginupActive">我参加的活动</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>公告系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showAccountmessage">查看公告</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>加入社团</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/ApplicationJoinSt">发起申请</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userSt/showMyapplication">我的申请</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>财务系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-fort-awesome"></i><a href="/userSt/showMyorder">未支付订单</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userSt/showMyoldorder">所有订单</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userSt/showMyaccount">个人账户中心</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+                    <div class="dropdown for-notification">
+
+                    </div>
+
+                    <div class="dropdown for-message">
+
+
+                    </div>
+                        <span th:if="${session.IsSz.equals('1')}" >
+                            <a href="/userManager/jumptoManagerPage">
+                                 <button type="button" class="btn btn-outline-secondary"><i class="fa fa-lightbulb-o"></i>&nbsp; 进入社长系统</button>
+
+                            </a>
+
+                        </span>
+
+
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="user-area dropdown float-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="user-avatar rounded-circle" src="/Root/images/admin.jpg" alt="User Avatar">
+                    </a>
+
+                    <div class="user-menu dropdown-menu">
+                        <a class="nav-link" href="/userSt/showMyinf"><i class="fa fa-user"></i> 个人信息修改</a>
+
+                        <a class="nav-link" href="/user/login"><i class="fa fa-power-off"></i> 退出系统</a>
+                    </div>
+                </div>
+
+                <div class="language-select dropdown" id="language-select">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+                        <i class="flag-icon flag-icon-us"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="language">
+                        <div class="dropdown-item">
+                            <span class="flag-icon flag-icon-fr"></span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-es"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-us"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-it"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>欢迎您使用本系统</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="page-header float-right">
+                <div class="page-title">
+                    <
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+        <iframe src="http://tianqi.5ikfc.com:90/plugin-code/?style=1&dy=3&city=aleitai" allowTransparency="true" frameborder="0" scrolling="no" width="680" height="50" id="weather_frame"></iframe>
+        <div class="col-sm-12">
+            <div class="alert  alert-success alert-dismissible fade show" role="alert">
+                <span class="badge badge-pill badge-success">登陆成功</span> 提示消息
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <div>
+            <div class="card-body" th:each="leaveList:${leaveList}">
+                <div class="alert alert-success" role="alert">
+                    <strong th:text="${'留言人：'+leaveList.user.studentinf.studentName}" ></strong><br>
+                    <strong th:text="${'标题：'+leaveList.lmTitle}" ></strong><br>
+
+                    <p th:text="${leaveList.lmMessage}" ></p>
+                    <input type="hidden" th:value="${leaveList.lmTitle}" >
+                    <input type="hidden" th:value="${leaveList.lmKey}" >
+                    <input type="hidden" th:value="${leaveList.lmSendperson}" >
+                    <p align="right" ><font color="#1e90ff" onclick="huifu(this)" >..回复</font></p>
+                    <hr>
+                    <p align="right" ><font color="#808080" style="font-size: 15px" th:text="${leaveList.lmCreatetime}" ></font></p>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!--/.col-->
+
+
+
+
+
+
+
+
+
+
+    </div> <!-- .content -->
+</div><!-- /#right-panel -->
+<div id="layerLeaveMessage" style="display: none" >
+    <div class="card-header">
+        <strong>编辑留言</strong>
+    </div>
+    <div class="card-body card-block">
+        <form action="/userSt/addLeaveMessage" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+
+            <div class="row form-group">
+                <div class="col col-md-3"><label for="messageinf" class=" form-control-label">留言内容</label></div>
+                <div class="col-12 col-md-9"><textarea name="textarea-input" id="messageinf" rows="9"  placeholder="请输入--留言内容" class="form-control"></textarea></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Right Panel -->
+
+<script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+<script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/Root/assets/js/main.js"></script>
+
+
+<script src="/Root/vendors/chart.js/dist/Chart.bundle.min.js"></script>
+<script src="/Root/assets/js/dashboard.js"></script>
+<script src="/Root/assets/js/widgets.js"></script>
+<script src="/Root/vendors/jqvmap/dist/jquery.vmap.min.js"></script>
+<script src="/Root/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+<script src="/Root/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+<script type="text/javascript">
+    function huifu(dom) {
+        var leaveMessageKey=$(dom).parent().prev().prev().val();
+        var recoverpersonKey=$(dom).parent().prev().val();
+        var title=$(dom).parent().prev().prev().prev().val();
+        var index2 = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["800px", "500px"],    //范围大小
+            title: "留言界面",               //定义标题
+            content:$("#layerLeaveMessage"),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var receiver=$(dom).val();
+                var message=$("#messageinf").val();
+                alert(leaveMessageKey);
+                alert(recoverpersonKey);
+                alert(title);
+                alert(message);
+                $.ajax({
+                    url : "/userSt/backLeavemessage", //请求的url地址
+                    dataType : "json", //返回格式为json
+                    async : true,
+                    data : {
+                        "Receiverperson" : recoverpersonKey,
+                        "title" : title,
+                        "message" : message,
+                        "leaveMessageKey" : leaveMessageKey
+                    }, //参数值
+                    type : "post", //请求方式
+                    success : function(date) {
+                        if(date.msg==1){
+                            var index=layer.load(0, {shade: false});
+                            layer.close(index);
+                            layer.msg("发送成功");
+                            location.reload();
+                            layer.close(index2);
+                            $("#messageTitle").val("");
+                            $("#messageinf").val("");
+                        }else {
+                            layer.msg("发送失败 请检查网络连接");
+                        }
+
+                    }
+                });
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index2);
+            },
+        });
+    }
+
+</script>
+<script>
+    (function($) {
+        "use strict";
+
+        jQuery('#vmap').vectorMap({
+            map: 'world_en',
+            backgroundColor: null,
+            color: '#ffffff',
+            hoverOpacity: 0.7,
+            selectedColor: '#1de9b6',
+            enableZoom: true,
+            showTooltip: true,
+            values: sample_data,
+            scaleColors: ['#1de9b6', '#03a9f5'],
+            normalizeFunction: 'polynomial'
+        });
+    })(jQuery);
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.stPersonDao">
+    <insert id="adddate">
+        insert into stpersoninf (STPE_KEY, STPE_PERSONID, STPE_STID)
+        values (#{key},#{pid},#{sid});
+    </insert>
+    <select id="StAllNumber" resultType="Integer">
+        SELECT COUNT(*) FROM stpersoninf where stpersoninf.STPE_STID=#{Stkey};
+
+    </select>
+    <resultMap id="getJoinSt" type="com.bysj.stsys.model.Stpersoninf">
+        <id property="stpeKey" column="STPE_KEY"/>
+        <result property="stpePersonid" column="STPE_PERSONID"/>
+        <result property="stpeStid" column="STPE_STID"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <result property="joinTime" column="JOIN_TIME"/>
+        <result property="isSz" column="IS_SZ"/>
+        <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+            <result property="stKey" column="ST_KEY"/>
+            <result property="stName" column="ST_NAME"/>
+            <result property="stStatue" column="ST_STATUE"/>
+            <association property="stkind" javaType="com.bysj.stsys.model.Stkind">
+                <result property="stkindName" column="STKIND_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="getStlist" resultMap="getJoinSt">
+        SELECT
+            stpersoninf.STPE_KEY,
+            stpersoninf.STPE_STID,
+            stpersoninf.IS_SZ,
+            stpersoninf.JOIN_TIME,
+            stinf.ST_NAME,
+            stkind.STKIND_NAME,
+            stinf.ST_STATUE,
+            stinf.ST_KEY
+        FROM
+            stpersoninf
+                INNER JOIN stinf ON stpersoninf.STPE_STID = stinf.ST_KEY
+                INNER JOIN stkind ON stinf.ST_KIND = stkind.STKIND_KEY
+
+        where STPE_PERSONID=#{userkey} and stpersoninf.DEL_FLAG=1
+        ORDER BY IS_SZ desc
+
+    </select>
+    <resultMap id="searchJoinStperson" type="com.bysj.stsys.model.Stpersoninf">
+        <id property="stpeKey" column="STPE_KEY" />
+        <result property="stpePersonid" column="STPE_PERSONID"/>
+        <result property="isSz" column="IS_SZ"/>
+        <association  property="studentinf" javaType="com.bysj.stsys.model.Studentinf" >
+            <result property="studentName" column="STUDENT_NAME"/>
+        </association>
+    </resultMap>
+    <select id="searchStperson" resultMap="searchJoinStperson" >
+        SELECT
+            stpersoninf.STPE_KEY,
+            stpersoninf.STPE_PERSONID,
+            studentinf.STUDENT_NAME,
+            stpersoninf.IS_SZ
+        FROM
+            stpersoninf
+                INNER JOIN `user` ON stpersoninf.STPE_PERSONID = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        WHERE
+            stpersoninf.STPE_STID = #{Stkey} and stpersoninf.STPE_PERSONID != #{Userkey}
+
+    </select>
+    <select id="searchMyjoinSt" resultType="string">
+        SELECT
+            stpersoninf.STPE_STID
+        FROM
+            stpersoninf
+        where stpersoninf.STPE_PERSONID=#{userKey}
+    </select>
+    <select id="myJoinStkey" resultType="string">
+        SELECT
+            stpersoninf.STPE_STID
+        FROM
+            stpersoninf
+        where STPE_PERSONID=#{userKey}
+
+    </select>
+    <select id="searchIsStmanager" resultType="com.bysj.stsys.model.Stpersoninf">
+        SELECT
+            stpersoninf.STPE_KEY,
+            stpersoninf.STPE_PERSONID,
+            stpersoninf.STPE_STID,
+            stpersoninf.DEL_FLAG,
+            stpersoninf.IS_SZ,
+            stpersoninf.JOIN_TIME
+        FROM
+            stpersoninf
+        where STPE_PERSONID=#{userKey} and IS_SZ=1
+    </select>
+    <insert id="addinSt">
+        insert into stpersoninf (STPE_KEY, STPE_PERSONID, STPE_STID, DEL_FLAG, IS_SZ, JOIN_TIME)
+        values (#{stpeKey},#{stpePersonKey},#{stPestid},1,2,sysdate());
+    </insert>
+    <resultMap id="searchstpersonList" type="com.bysj.stsys.model.Stpersoninf">
+        <result property="stpePersonid" column="STPE_PERSONID"/>
+        <association property="user" javaType="com.bysj.stsys.model.User">
+            <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+                <result property="studentName" column="STUDENT_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="searchstPerson" resultMap="searchstpersonList">
+        SELECT
+            stpersoninf.STPE_PERSONID,
+            studentinf.STUDENT_NAME
+        FROM
+            stpersoninf
+                INNER JOIN `user` ON stpersoninf.STPE_PERSONID = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where STPE_STID=#{stkey}
+    </select>
+    <delete id="tuichuSt">
+        delete from stpersoninf where STPE_KEY=#{key};
+    </delete>
+    <update id="updateFuezeren">
+        update stpersoninf set stpersoninf.IS_SZ=2 where stpersoninf.STPE_PERSONID=#{oldStudentId} and stpersoninf.STPE_STID=#{Stkey}
+    </update>
+    <update id="updateFuezeren2">
+        update stpersoninf set stpersoninf.IS_SZ=1 where stpersoninf.STPE_PERSONID=#{newStudentId} and stpersoninf.STPE_STID=#{Stkey}
+    </update>
+    <insert id="createinSt">
+        insert into stpersoninf (STPE_KEY, STPE_PERSONID, STPE_STID, DEL_FLAG, IS_SZ, JOIN_TIME)
+        values (#{stpeKey},#{stpePersonKey},#{stPestid},1,1,sysdate());
+    </insert>
+</mapper>

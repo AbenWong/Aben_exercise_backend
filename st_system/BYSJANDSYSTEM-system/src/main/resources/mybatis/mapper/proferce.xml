@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.proferceDao">
+    <select id="findprofession" resultType="com.bysj.stsys.model.Profession">
+        SELECT
+            profession.PROFESSION_KEY,
+            profession.PROFESSION_NAME,
+            profession.PROFESSION_COLLEGE,
+            profession.DEL_FLAG
+        FROM
+            profession
+        where PROFESSION_COLLEGE=#{collegeKey}
+</select>
+</mapper>

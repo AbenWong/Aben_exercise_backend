@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.stKindDao">
+    <select id="getStKindList" resultType="com.bysj.stsys.model.Stkind">
+        select STKIND_KEY,STKIND_NAME from stkind where DEL_FLAG=1
+    </select>
+    <!--修改社团种类名-->
+    <update id="updateStKindName">
+        update stkind set STKIND_NAME=#{newStKindName} where STKIND_KEY=#{stKindKey}
+    </update>
+    <!--删除社团-->
+    <delete id="delStkind">
+        DELETE from stkind where STKIND_KEY=#{stKindKey}
+    </delete>
+    <!--新增社团类别-->
+    <insert id="addStkind">
+        insert into stkind value (#{stKindKey},#{stKindName},1)
+    </insert>
+    <!--查看新增的社团类别是否存在-->
+    <select id="checkStkindNameIsPresence" resultType="com.bysj.stsys.model.Stkind" >
+        select * from stkind where STKIND_NAME=#{stKindName}
+    </select>
+</mapper>

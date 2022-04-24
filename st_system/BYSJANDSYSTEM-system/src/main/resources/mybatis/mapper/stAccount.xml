@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.staccountDao">
+    <update id="addmoney">
+        update staccounnt set STAT_MONEY=STAT_MONEY+#{money} where STAT_KEY=#{stkey}
+    </update>
+    <select id="lookstaccount" resultType="com.bysj.stsys.model.Staccounnt" >
+        select * from staccounnt where staccounnt.STAT_KEY=#{stkey}
+    </select>
+</mapper>

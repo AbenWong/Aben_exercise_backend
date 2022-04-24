@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.activeDao">
+    <select id="findStActive" resultType="com.bysj.stsys.model.Active" >
+        SELECT
+        active.AC_kEY,
+        active.AC_TITLE,
+        active.AC_CONTENT,
+        active.AC_MAXPEOPLENUM,
+        active.AC_PLACE,
+        active.AC_TIME,
+        active.AC_DATE,
+        active.AC_OTHERINF,
+        active.AC_CREATEST
+        FROM
+        active
+
+
+        WHERE 1=1 and AC_STATUE=2
+        <if test="StactiveList.size() > 0">
+            AND AC_kEY NOT IN
+            <foreach collection="StactiveList" item="acKey" index="index" open="(" separator="," close=")">
+                #{acKey}
+            </foreach>
+        </if>
+
+
+    </select>
+    <select id="findStactiveInf" resultType="com.bysj.stsys.model.Active">
+        SELECT
+            active.AC_kEY,
+            active.AC_TITLE,
+            active.AC_CONTENT,
+            active.AC_MAXPEOPLENUM,
+            active.AC_PLACE,
+            active.AC_TIME,
+            active.AC_DATE,
+            active.AC_OTHERINF,
+            active.AC_STATUE,
+            active.DEL_FLAG,
+            active.AC_CREATEST
+        FROM
+            active
+        WHERE AC_kEY=#{acKey}
+
+    </select>
+    <insert id="addStactive">
+        insert into active(ac_key, ac_title, ac_content, ac_maxpeoplenum, ac_place, ac_time, ac_date, ac_otherinf, ac_createst,AC_CREATEPERSON)
+        VALUES (#{ackey}, #{actitle}, #{accontent}, #{acmaxpeoplenum},
+         #{acplace}, #{actime}, #{acdate}, #{acotherinf}, #{accreatest},#{userKey})
+    </insert>
+    <select id="activeAppliaction" resultType="com.bysj.stsys.model.Active">
+        SELECT
+            active.AC_kEY,
+            active.AC_TITLE,
+            active.AC_CONTENT,
+            active.AC_MAXPEOPLENUM,
+            active.AC_PLACE,
+            active.AC_TIME,
+            active.AC_DATE,
+            active.AC_OTHERINF,
+            active.AC_STATUE,
+            active.DEL_FLAG,
+            active.AC_CREATEST
+        FROM
+            active
+
+        WHERE 1=1 and AC_CREATEPERSON=${userKey} order by AC_STATUE desc
+<!--        <if test="stKeyList.size() > 0">-->
+<!--            AND AC_CREATEST  IN-->
+<!--            <foreach collection="stKeyList" item="stKey" index="index" open="(" separator="," close=")">-->
+<!--                #{stKey}-->
+<!--            </foreach>-->
+<!--        </if>-->
+    </select>
+    <resultMap id="activeList" type="com.bysj.stsys.model.Active">
+        <result property="acKEy" column="AC_kEY"/>
+        <result property="acTitle" column="AC_TITLE"/>
+        <result property="acContent" column="AC_CONTENT"/>
+        <result property="acMaxpeoplenum" column="AC_MAXPEOPLENUM"/>
+        <result property="acPlace" column="AC_PLACE"/>
+        <result property="acTime" column="AC_TIME"/>
+        <result property="acDate" column="AC_DATE"/>
+        <result property="acOtherinf" column="AC_OTHERINF"/>
+        <result property="acStatue" column="AC_STATUE"/>
+        <result property="acCreatest" column="AC_CREATEST"/>
+        <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+            <result property="stName" column="ST_NAME"/>
+        </association>
+    </resultMap>
+    <select id="findactive" resultMap="activeList">
+        SELECT
+            active.AC_kEY,
+            active.AC_TITLE,
+            active.AC_CONTENT,
+            active.AC_MAXPEOPLENUM,
+            active.AC_PLACE,
+            active.AC_TIME,
+            active.AC_DATE,
+            active.AC_OTHERINF,
+            active.AC_STATUE,
+            active.DEL_FLAG,
+            active.AC_CREATEST,
+            active.AC_CREATEPERSON,
+            stinf.ST_NAME
+        FROM
+            active
+                INNER JOIN stinf ON active.AC_CREATEST = stinf.ST_KEY
+
+    </select>
+    <update id="updateAcStatue">
+        update active set AC_STATUE=#{statue} where AC_kEY=#{ackey}
+    </update>
+</mapper>

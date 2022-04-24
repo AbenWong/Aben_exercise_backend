@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.accouncementDao">
+    <select id="findRootAccounceMent" resultType="com.bysj.stsys.model.Announcement" >
+        SELECT
+            announcement.AT_KEY,
+            announcement.AT_TITLE,
+            announcement.AT_MESSAGE,
+            announcement.AT_CREATETIME
+        FROM
+            announcement
+        where announcement.AT_CREATEPERSON='admin' and announcement.AT_LOOKPERSON='all' and AT_STATUE=1
+        order by AT_CREATETIME desc
+
+    </select>
+    <select id="findRootAccounceMentall" resultType="com.bysj.stsys.model.Announcement" >
+        SELECT
+            *
+        FROM
+            announcement
+        where announcement.AT_CREATEPERSON='admin' and announcement.AT_LOOKPERSON='all'
+        order by AT_CREATETIME desc
+
+    </select>
+    <select id="findAllMessage" resultType="string">
+        select
+        announcement.AT_MESSAGE
+        from announcement
+        where AT_KEY=#{Atkey}
+    </select>
+    <resultMap id="getStannouncement" type="com.bysj.stsys.model.Announcement">
+        <id property="atKey" column="AT_KEY"/>
+        <result property="atTitle" column="AT_TITLE"/>
+        <result property="atMessage" column="AT_MESSAGE"/>
+        <result property="atCreatetime" column="AT_CREATETIME"/>
+        <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+            <result property="stName" column="ST_NAME"/>
+        </association>
+    </resultMap>
+    <select id="findStAccounceMent" resultMap="getStannouncement" >
+        SELECT
+        announcement.AT_KEY,
+        announcement.AT_TITLE,
+        announcement.AT_MESSAGE,
+        announcement.AT_CREATETIME,
+        announcement.AT_CREATEPERSON,
+        stinf.ST_NAME
+        FROM
+        announcement ,
+        stinf
+        WHERE
+        announcement.AT_LOOKPERSON=stinf.ST_KEY and AT_STATUE=1
+        <if test="myjoinStList.size() > 0 ">
+            and announcement.AT_LOOKPERSON IN
+
+            <foreach collection="myjoinStList" index="index" item="Stkey" open="(" separator="," close=")" >
+                #{Stkey}
+            </foreach>
+        </if>
+
+        ORDER BY AT_CREATETIME desc
+
+
+
+    </select>
+    <insert id="addannounce">
+        insert into announcement(at_key, at_title, at_message, at_createtime, at_createperson, at_lookperson)
+        VALUES(#{atKey},#{atTitle},#{atMessage},sysdate(),#{userKey},#{stKey})
+    </insert>
+    <resultMap id="showMyannounce" type="com.bysj.stsys.model.Announcement">
+        <id property="atKey" column="AT_KEY"/>
+        <result property="atTitle" column="AT_TITLE"/>
+        <result property="atMessage" column="AT_MESSAGE"/>
+        <result property="atCreatetime" column="AT_CREATETIME"/>
+        <result property="atCreateperson" column="AT_CREATEPERSON"/>
+        <result property="atLookperson" column="AT_LOOKPERSON"/>
+        <result property="atStatue" column="AT_STATUE"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+            <result property="stName" column="ST_NAME"/>
+        </association>
+
+    </resultMap>
+    <select id="showMyannounce" resultMap="showMyannounce">
+        SELECT
+            announcement.AT_KEY,
+            announcement.AT_TITLE,
+            announcement.AT_MESSAGE,
+            announcement.AT_CREATETIME,
+            announcement.AT_CREATEPERSON,
+            announcement.AT_LOOKPERSON,
+            announcement.AT_STATUE,
+            announcement.DEL_FLAG,
+            stinf.ST_NAME
+        FROM
+            announcement ,
+            stinf
+        WHERE
+            announcement.AT_CREATEPERSON = #{userkey} and stinf.ST_KEY=announcement.AT_LOOKPERSON
+        ORDER BY announcement.AT_CREATETIME desc
+
+
+    </select>
+    <update id="updateAnnounceStatue">
+        update announcement set AT_STATUE=2 where AT_KEY=${anKey}
+    </update>
+    <insert id="rootaddannounce">
+        insert into announcement(at_key, at_title, at_message, at_createtime, at_createperson, at_lookperson)
+        VALUES(#{atKey},#{atTitle},#{atMessage},sysdate(),'admin','all')
+    </insert>
+</mapper>

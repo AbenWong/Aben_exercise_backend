@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.accountDao">
+    <select id="findMyaccountInf" resultType="com.bysj.stsys.model.Account" >
+        SELECT
+            account.ACCOUNT_KEY,
+            account.ACCOUNT_USERID,
+            account.ACCOUNT_PASSWORD,
+            account.ACCOUNT_MONEY
+        FROM
+            account
+        where ACCOUNT_USERID=#{userKey}
+    </select>
+    <insert id="addAccount">
+        insert into account(account_key, account_userid, account_password)
+         values (#{key},${userKey},${password})
+    </insert>
+    <update id="topUp">
+        update account set ACCOUNT_MONEY=ACCOUNT_MONEY+ #{saveMoney} where ACCOUNT_KEY=#{accountKey}
+    </update>
+    <update id="updatePaypassword">
+        update account set  ACCOUNT_PASSWORD=${password} where ACCOUNT_KEY=#{accountKey}
+    </update>
+    <update id="myaccountpay">
+        update account set ACCOUNT_MONEY=ACCOUNT_MONEY-#{money} where ACCOUNT_USERID = #{userKey}
+    </update>
+
+</mapper>

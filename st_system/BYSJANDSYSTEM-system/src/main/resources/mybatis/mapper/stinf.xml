@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.stListDao">
+    <resultMap id="Stlist" type="com.bysj.stsys.model.Stinf">
+        <id property="stKey" column="ST_KEY"/>
+        <result property="stName" column="ST_NAME"/>
+        <result property="presidentid" column="PRESIDENTID"/>
+        <result property="stStatue" column="ST_STATUE"/>
+        <result property="stIntf" column="ST_INTF"/>
+        <result property="stCreatetime" column="ST_CREATETIME"/>
+        <result property="stLogo" column="ST_LOGO"/>
+        <result property="delFlag" column="DEL_FLAG"/>
+        <association property="stkind" javaType="com.bysj.stsys.model.Stkind">
+            <result property="stkindKey" column="STKIND_KEY"/>
+            <result property="stkindName" column="STKIND_NAME"/>
+            <result property="delFlag" column="DEL_FLAG"/>
+        </association>
+        <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+            <result property="studentKey" column="STUDENT_KEY"/>
+            <result property="studentName" column="STUDENT_NAME"/>
+            <result property="studentProfession" column="STUDENT_PROFESSION"/>
+            <result property="delFlag" column="DEL_FLAG"/>
+        </association>
+    </resultMap>
+    <select id="findStlist" resultMap="Stlist" >
+
+        SELECT
+            stinf.ST_KEY,
+            stinf.ST_NAME,
+            stinf.PRESIDENTID,
+            studentinf.STUDENT_NAME,
+            stinf.ST_KIND,
+            stkind.STKIND_NAME,
+            stinf.ST_STATUE,
+            stinf.ST_CREATETIME,
+            stinf.ST_LOGO,
+            stinf.DEL_FLAG
+        FROM
+            stinf
+                INNER JOIN stkind ON stinf.ST_KIND = stkind.STKIND_KEY
+                INNER JOIN studentinf ON stinf.PRESIDENTID = studentinf.STUDENT_KEY
+        where  stinf.ST_STATUE=1 and stinf.DEL_FLAG=1
+            order by ST_KEY
+
+
+    </select>
+    <select id="rootfindStlist" resultMap="Stlist" >
+
+        SELECT
+            stinf.ST_KEY,
+            stinf.ST_NAME,
+            stinf.PRESIDENTID,
+            studentinf.STUDENT_NAME,
+            stinf.ST_KIND,
+            stkind.STKIND_NAME,
+            stinf.ST_STATUE,
+            stinf.ST_CREATETIME,
+            stinf.ST_LOGO,
+            stinf.DEL_FLAG
+        FROM
+            stinf
+                INNER JOIN stkind ON stinf.ST_KIND = stkind.STKIND_KEY
+                INNER JOIN studentinf ON stinf.PRESIDENTID = studentinf.STUDENT_KEY
+
+        order by ST_KEY
+
+
+    </select>
+
+    <select id="findStinf" parameterType="String" resultMap="Stlist" >
+        SELECT
+            stinf.ST_KEY,
+            stinf.ST_NAME,
+            stinf.PRESIDENTID,
+            stinf.ST_KIND,
+            stinf.ST_STATUE,
+            stinf.ST_CREATETIME,
+            stinf.DEL_FLAG,
+            stinf.ST_INTF,
+            stinf.ST_LOGO,
+            studentinf.STUDENT_NAME,
+            stkind.STKIND_NAME
+        FROM
+            stinf
+                INNER JOIN studentinf ON stinf.PRESIDENTID = studentinf.STUDENT_KEY
+                INNER JOIN stkind ON stinf.ST_KIND = stkind.STKIND_KEY
+        WHERE
+            stinf.ST_KEY = #{Stkey}
+
+    </select>
+<!--    根据id修改社团名称-->
+    <update id="updateStName" parameterType="string">
+        update stinf set ST_NAME=#{newStName} where ST_KEY=#{stKey}
+    </update>
+   <!--修改社团所属类别-->
+    <update id="updateStkind" parameterType="string">
+        update stinf set ST_KIND=#{newStKind} where ST_KEY=#{stKey}
+    </update>
+    <!--修改社团简介-->
+    <update id="updateStintf" parameterType="string">
+        update stinf set ST_INTF=#{newStintf} where ST_KEY=#{stKey};
+    </update>
+    <!--根据社团类别查看下属社团-->
+    <select id="selectStinfByStkey" resultType="com.bysj.stsys.model.Stinf" >
+        select * from stinf where ST_KIND=#{stKindKey} and DEL_FLAG=1
+    </select>
+    <select id="findNotJoinStList" resultType="com.bysj.stsys.model.Stinf">
+        SELECT
+            stinf.ST_NAME,
+            stinf.ST_KEY
+        FROM
+            stinf where 1=1
+            <if test="myJoinStList.size() > 0" >
+                and  ST_KEY not in
+                <foreach collection="myJoinStList" index="index" item="list" open="(" separator="," close=")">
+                    #{list}
+                </foreach>
+            </if>
+
+
+    </select>
+    <update id="uploadStlogo">
+        update stinf set ST_LOGO=#{logo} where ST_KEY=#{stkey}
+    </update>
+    <update id="updateFuzeren">
+        update stinf set stinf.PRESIDENTID=#{newStudent} where ST_KEY=#{Stkey}
+    </update>
+    <update id="updateStstatue">
+        update  stinf set stinf.ST_STATUE=#{statue} where stinf.ST_KEY=#{Stkey}
+        </update>
+    <insert id="addSt">
+        insert into stinf(st_key, st_name, presidentid, st_kind, st_createtime, st_intf, st_logo)
+        values (#{stKey},#{stname},#{studentpersonId},#{stKind},sysdate(),#{stinf},'')
+    </insert>
+
+</mapper>

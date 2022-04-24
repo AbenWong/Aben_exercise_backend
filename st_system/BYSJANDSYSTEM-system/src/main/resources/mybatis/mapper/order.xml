@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.orderDao">
+    <insert id="addorder">
+        insert into `order`(order_key, order_tollkey, order_paypeoplekey, order_statue,ORDER_PAYMONEY)
+        values (#{orderkey},#{ordertollkey},#{paypeoplekey},1,#{money})
+    </insert>
+    <resultMap id="findorder" type="com.bysj.stsys.model.Order">
+        <result property="orderKey" column="ORDER_KEY"/>
+        <result property="orderTollkey" column="ORDER_TOLLKEY"/>
+        <result property="orderPaypeoplekey" column="ORDER_PAYPEOPLEKEY"/>
+        <result property="orderStatue" column="ORDER_STATUE"/>
+        <result property="orderPaymoney" column="ORDER_PAYMONEY"/>
+        <result property="orderPaytime" column="ORDER_PAYTIME"/>
+        <association property="toll" javaType="com.bysj.stsys.model.Toll">
+            <result property="tollTitle" column="TOLL_TITLE"/>
+            <result property="tollMessage" column="TOLL_MESSAGE"/>
+            <result property="tollSt" column="TOLL_ST"/>
+            <result property="tollFlag" column="TOLL_FLAG"/>
+            <result property="totllCreatetime" column="TOTLL_CREATETIME"/>
+            <result property="totllLastpaytime" column="TOTLL_LASTPAYTIME"/>
+            <association property="stinf" javaType="com.bysj.stsys.model.Stinf">
+                <result property="stName" column="ST_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="findMyorder" resultMap="findorder">
+        SELECT
+            `order`.ORDER_KEY,
+            `order`.ORDER_TOLLKEY,
+            `order`.ORDER_PAYPEOPLEKEY,
+            `order`.ORDER_STATUE,
+            `order`.ORDER_PAYMONEY,
+            `order`.ORDER_PAYTIME,
+            toll.TOLL_ST,
+            toll.TOLL_TITLE,
+            toll.TOLL_MESSAGE,
+            toll.TOTLL_CREATETIME,
+            toll.TOTLL_LASTPAYTIME,
+            stinf.ST_NAME
+        FROM
+            `order`
+                INNER JOIN toll ON `order`.ORDER_TOLLKEY = toll.TOLL_KEY
+                INNER JOIN stinf ON toll.TOLL_ST = stinf.ST_KEY
+        where `order`.ORDER_STATUE=#{orderstatue} and toll.toll_flag=#{tollstatue} and order.ORDER_PAYPEOPLEKEY=#{userKey}
+    </select>
+    <update id="payupdatestatue">
+        update `order` set ORDER_STATUE=2 where order.ORDER_KEY=#{orderKey}
+    </update>
+    <select id="findorderaboutme" resultMap="findorder">
+        SELECT
+            `order`.ORDER_KEY,
+            `order`.ORDER_TOLLKEY,
+            `order`.ORDER_PAYPEOPLEKEY,
+            `order`.ORDER_STATUE,
+            `order`.ORDER_PAYMONEY,
+            `order`.ORDER_PAYTIME,
+            toll.TOLL_ST,
+            toll.TOLL_TITLE,
+            toll.TOLL_MESSAGE,
+            toll.TOTLL_CREATETIME,
+            toll.TOTLL_LASTPAYTIME,
+            toll.TOLL_FLAG,
+            stinf.ST_NAME
+        FROM
+            `order`
+                INNER JOIN toll ON `order`.ORDER_TOLLKEY = toll.TOLL_KEY
+                INNER JOIN stinf ON toll.TOLL_ST = stinf.ST_KEY
+        where order.ORDER_PAYPEOPLEKEY=#{userKey}
+    </select>
+    <resultMap id="szShowOrderproplr" type="com.bysj.stsys.model.Order">
+        <result property="orderKey" column="ORDER_KEY"/>
+        <result property="orderTollkey" column="ORDER_TOLLKEY"/>
+        <result property="orderPaypeoplekey" column="ORDER_PAYPEOPLEKEY"/>
+        <result property="orderStatue" column="ORDER_STATUE"/>
+        <result property="orderPaymoney" column="ORDER_PAYMONEY"/>
+        <result property="orderPaytime" column="ORDER_PAYTIME"/>
+        <association property="user" javaType="com.bysj.stsys.model.User">
+
+                <result property="userStid" column="USER_STID"/>
+            <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+                <result property="studentName" column="STUDENT_NAME"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="StmanagerFindorder" resultMap="szShowOrderproplr">
+        SELECT
+            `order`.ORDER_KEY,
+            `order`.ORDER_TOLLKEY,
+            `order`.ORDER_PAYPEOPLEKEY,
+            `order`.ORDER_STATUE,
+            `order`.ORDER_PAYTIME,
+            `order`.ORDER_PAYMONEY,
+            `user`.USER_STID,
+            studentinf.STUDENT_NAME
+        FROM
+            `order`
+                INNER JOIN `user` ON `order`.ORDER_PAYPEOPLEKEY = `user`.USER_STID
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where ORDER_TOLLKEY=#{tollkey}
+
+    </select>
+</mapper>

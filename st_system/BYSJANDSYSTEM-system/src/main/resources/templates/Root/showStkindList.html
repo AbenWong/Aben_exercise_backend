@@ -1,0 +1,475 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sufee Admin - HTML5 Admin Template</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+
+
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="/Root/vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/Root/vendors/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand"  >管理员端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/goroot"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>社团信息管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_stList">查看社团</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/search_StkingList">社团分类管理</a></li>
+
+                        <li><i class="fa fa-bars"></i><a href="/stlnf/chengliSt">新增社团</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>活动管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-th"></i><a href="/stlnf/jumptoStactivepage">活动信息</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-area-chart"></i>公告系统</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-map-o"></i><a href="/stlnf/jumptoAnnouncePage">管理员公告管理</a></li>
+                        <li><i class="menu-icon fa fa-street-view"></i><a href="/stlnf/addaccouncement">公告发布</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+                    <div class="dropdown for-notification">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="notification">
+
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown for-message">
+
+                        <div class="dropdown-menu" aria-labelledby="message">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="user-area dropdown float-right">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="user-avatar rounded-circle" src="../Root/images/admin.jpg" alt="User Avatar">
+                    </a>
+
+                    <div class="user-menu dropdown-menu">
+
+                        <a class="nav-link" href="/login"><i class="fa fa-power-off"></i> 退出</a>
+                    </div>
+                </div>
+
+                <div class="language-select dropdown" id="language-select">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+                        <i class="flag-icon flag-icon-us"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="language">
+                        <div class="dropdown-item">
+                            <span class="flag-icon flag-icon-fr"></span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-es"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-us"></i>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="flag-icon flag-icon-it"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>社团分类信息查看</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">社团分类列表</strong>
+                        </div>
+
+                        <div class="card-body">
+                            <button class="btn btn-outline-success" id="addStkindButton" >添加社团类别</button>
+                            <br>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>类别ID</th>
+                                    <th>类别名称</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="showStkind" >
+                                <tr th:each="stKind:${stKindList}" >
+                                    <td><a href="#"><font color="#0000FF" th:text="${stKind.stkindKey}" ></font></a></td>
+                                    <td th:text="${stKind.stkindName}"></td>
+                                    <td><button class="btn btn-primary btn-sm" th:placeholder="${stKind.stkindKey}" name="showStbyStkey" >查看下属社团</button>
+                                        <button class="btn btn-success btn-sm" th:placeholder="${stKind.stkindKey}" name="changeStKindName" >修改类别名</button>
+                                        <button class="btn btn-secondary btn-sm" th:placeholder="${stKind.stkindKey}" name="delStkind" >删除类别</button>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+
+<form action="/stlnf/searchStinf" method="post" id="showStinfForm">
+    <input type="hidden" name="StKey" value="" id="formStkey" >
+</form>
+</div><!-- /#right-panel -->
+<!--展示社团列表弹出层-->
+<div id="showStListDom" style="display: none;" >
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <th>社团名称</th>
+                                <th>操作</th>
+                                </thead>
+                                <tbody id="showTbody" >
+
+                                </tbody>
+                            </table>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div><!-- .animated -->
+    </div>
+</div>
+<!-- Right Panel -->
+<!--修改类别名称-->
+<div id="changeStKindNamelayerDom" style="display: none;  margin: 0 auto " >
+    <input type="text" class="form-control" placeholder="请输入新的类别名称" id="newStKindName" >
+</div>
+
+<script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+<script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/Root/assets/js/main.js"></script>
+<script src="/Root/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/Root/vendors/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/Root/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/Root/vendors/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/Root/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/Root/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/Root/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/Root/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/Root/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/Root/vendors/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+<script src="/Root/assets/js/init-scripts/data-table/datatables-init.js"></script>
+<script type="text/javascript" src="/myjs/jquery.js" ></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<script type="text/javascript" >
+$(function () {
+    $("button[name='showStbyStkey']").click(this ,function () {
+        showStByStKindkey(this);
+    })
+    $("button[name='changeStKindName']").click(this ,function () {
+        changeStKindName(this);
+    })
+    $("button[name='delStkind']").click(this ,function () {
+        delStkind(this)
+    })
+    $("#addStkindButton").click(function () {
+        addStkind();
+    })
+});
+    function showStByStKindkey(dom) {
+    var stKindKey=$(dom).attr("placeholder");
+        $.ajax({
+            url : "/stlnf/getStListByStKey", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "stKindKey":stKindKey
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                $("#showTbody").empty();
+                if(date!=null){
+                    $(date).each(function () {
+                        $("#showTbody").append('<tr><td><font color="#1e90ff" >'+this.stName+'</font></td><td><button class="btn btn-success btn-sm" name="showStInf" value="'+this.stKey+'" >查看详细信息</button></td></tr>')
+                    });
+                    $("button[name='showStInf']").click(this,function () {
+                        var stkey=$(this).val();
+                        window.location.href="/stlnf/searchStinf?Stkey="+stkey+"";
+
+                    });
+                    var index = layer.open({            //打开layer弹出框
+                        type: 1,    //皮肤类型，在skin文件夹中
+                        area: ["600px", "400px"],    //范围大小
+                        title: "点击进入社团详细信息",               //定义标题
+                        content:$('#showStListDom'),       //输出的字符串，定义弹出框的html页面
+                        btn: ['确定', '取消'],　　　　//按钮
+                        yes: function (index, layero) { //确定按钮的处理函数
+                            layer.close(index);
+
+
+                        },
+                        btn2: function (index, layero) { //取消按钮后的处理函数
+                            layer.close(index);
+                        },
+                    });
+                }
+
+            }
+        });
+    }
+    function changeStKindName(dom) {
+        var stKindKey=$(dom).attr("placeholder");
+        var index = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "150px"],    //范围大小
+            title: "输入新的社团类别名",               //定义标题
+            content:$('#changeStKindNamelayerDom'),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["300px", "150px"],    //范围大小
+                    title: "确认提示",               //定义标题
+                    content:"确认修改吗 此操作不可撤回",       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var newStkindName=$("#newStKindName").val();
+                        $.ajax({
+                            url : "/stlnf/updateStkindName", //请求的url地址
+                            dataType : "json", //返回格式为json
+                            async : true,
+                            data : {
+                                "stKindkey" : stKindKey,
+                                "newStkindname" : newStkindName
+                            }, //参数值
+                            type : "post", //请求方式
+                            success : function(date) {
+                                if(date.msg==1){
+                                    $(dom).parent().prev().html(newStkindName);
+                                    layer.close(index);
+                                    layer.close(index2);
+                                }
+
+                            }
+                        });
+
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                        layer.close(index2);
+                    },
+                });
+                layer.close(index);
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+            },
+        });
+    }
+    function delStkind(dom) {
+        var stKindKey=$(dom).attr("placeholder");
+        var index2 = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "150px"],    //范围大小
+            title: "确认提示",               //定义标题
+            content:"确认删除吗 此操作不可撤回",       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var newStkindName=$("#newStKindName").val();
+                $.ajax({
+                    url : "/stlnf/delStkind", //请求的url地址
+                    dataType : "json", //返回格式为json
+                    async : true,
+                    data : {
+                        "stKindKey" : stKindKey
+                    }, //参数值
+                    type : "post", //请求方式
+                    success : function(date) {
+                        if(date.msg==200001){
+                            layer.msg("删除社团类别失败 :必须先删除下属的社团");
+                            layer.close(index2);
+                        }
+                        if(date.msg==1){
+                            layer.msg("删除成功");
+                            $(dom).parent().parent().remove();
+                            layer.close(index2);
+                        }
+
+                    }
+                });
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+                layer.close(index2);
+            },
+        });
+        layer.close(index);
+    }
+    function addStkind() {
+        var index = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["300px", "150px"],    //范围大小
+            title: "输入新的社团类别名",               //定义标题
+            content:$('#changeStKindNamelayerDom'),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var index2 = layer.open({            //打开layer弹出框
+                    type: 1,    //皮肤类型，在skin文件夹中
+                    area: ["300px", "150px"],    //范围大小
+                    title: "确认提示",               //定义标题
+                    content:"确认添加",       //输出的字符串，定义弹出框的html页面
+                    btn: ['确定', '取消'],　　　　//按钮
+                    yes: function (index, layero) { //确定按钮的处理函数
+                        var newStkindName=$("#newStKindName").val();
+                        $.ajax({
+                            url : "/stlnf/checkStkindNameIsPresence", //请求的url地址
+                            dataType : "json", //返回格式为json
+                            async : true,
+                            data : {
+                                "newStkindName" : newStkindName
+                            }, //参数值
+                            type : "post", //请求方式
+                            success : function(date) {
+                                if(date.length>0){
+                                    layer.msg("已经存在同名的社团类别");
+                                }else {
+                                    $.ajax({
+                                        url : "/stlnf/addNewStkind", //请求的url地址
+                                        dataType : "json", //返回格式为json
+                                        async : true,
+                                        data : {
+                                            "newStkindName" : newStkindName
+                                        }, //参数值
+                                        type : "post", //请求方式
+                                        success : function(date) {
+                                            if(date.msg==1){
+                                                location.reload();
+                                            }
+
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+
+
+
+                    },
+                    btn2: function (index, layero) { //取消按钮后的处理函数
+                        layer.close(index);
+                        layer.close(index2);
+                    },
+                });
+                layer.close(index);
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+            },
+        });
+    }
+</script>
+
+</body>
+
+</html>

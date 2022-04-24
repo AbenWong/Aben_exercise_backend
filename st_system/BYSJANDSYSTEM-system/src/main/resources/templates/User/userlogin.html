@@ -1,0 +1,244 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录平台</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/Root/vendors/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/Root/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/Root/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/Root/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/Root/vendors/selectFX/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="/Root/assets/css/style.css">
+    <script type="text/javascript" src="/myjs/jquery.js" ></script>
+    <script type="text/javascript" src="/layer/layer.js"></script>
+    <script type="text/javascript" src="/myjs/login.js"></script>
+</head>
+<style>
+    .bgimges{
+        background-image: url(/Root/vendors/jqvmap/examples/images/slider-5.png)
+
+    }
+</style>
+<body class="bgimges">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+
+            </div>
+            <div class="login-form">
+                <form action="/user/psLogin" method="post" id="login_form" >
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" class="form-control" placeholder="请输入用户名" name="username" id="username" >
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" class="form-control" placeholder="请输入密码" name="password" id="password" >
+                        <font color="red" th:text="${login_msg}" ></font>
+                    </div>
+                    <div class="checkbox">
+
+                        <label class="pull-right">
+                        </label>
+
+                    </div>
+                    <button type="button" id="login_button" class="btn btn-success btn-flat m-b-30 m-t-30">登录</button>
+                    <div class="social-login-content">
+                        <div class="social-button">
+                            <button type="button" class="btn social facebook btn-flat btn-addon mb-3" id="telLoginbutton" >
+                                短信验证码登录</button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="telLoginlayer" style="display: none;margin: 0 auto " >
+    <form action="/user/telLogin" id="telLoginform" >
+    <input type="text" id="inputText" name="telNum" class="showtext" placeholder="请输入手机号" value="" />
+    <font color="red" id="flag"></font>
+    <br>
+    <input type="text" id="YZcode" name="telCode" class="showtext"  value="" />
+    <input type="button" id="checkbutton" value="获取验证码" disabled="disabled" align="left" class="showbutton" />
+        <br><font color="red" id="msgflag"></font>
+    </form>
+</div>
+<style>
+    .showbutton {
+        background-color: #969696;
+        border: none;
+        color: white;
+        padding: 10px 27px;
+        text-decoration: none;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .showtext {
+        width: 40%;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+    }
+</style>
+<script src="/Root/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/Root/vendors/popper.js/dist/umd/popper.min.js"></script>
+<script src="/Root/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/Root/assets/js/main.js"></script>
+<script type="text/javascript">
+    $("#telLoginbutton").click(function () {
+        $("#msgflag").html(" ");
+        var index2 = layer.open({            //打开layer弹出框
+            type: 1,    //皮肤类型，在skin文件夹中
+            area: ["600px", "300px"],    //范围大小
+            title: "确认提示",               //定义标题
+            content:$("#telLoginlayer"),       //输出的字符串，定义弹出框的html页面
+            btn: ['确定', '取消'],　　　　//按钮
+            yes: function (index, layero) { //确定按钮的处理函数
+                var telNum=$("#inputText").val();
+                var telCode=$("#YZcode").val();
+                $.ajax({
+                    url : "/user/telLogin", //请求的url地址
+                    dataType : "json", //返回格式为json
+                    async : true,
+                    data : {
+                        "telNum" : telNum,
+                        "telCode" : telCode
+                    }, //参数值
+                    type : "post", //请求方式
+                    success : function(date) {
+                        if(date==0){
+                            $("#msgflag").html("未查询到此用户 请注册");
+                        }
+                        if(date==1){
+                            $("#msgflag").html("success");
+                            window.location.href="/user/gouserMtpage";
+                        }
+                        if(date==2){
+                            $("#msgflag").html("验证码错误");
+                        }
+
+
+                    }
+                });
+
+
+            },
+            btn2: function (index, layero) { //取消按钮后的处理函数
+                layer.close(index);
+                layer.close(index2);
+            },
+        });
+        layer.close(index);
+    })
+</script>
+<script type="application/javascript">
+    //设置每隔0.1秒执行一次
+    $(function() {
+        getTelNum();
+        $("#checkbutton").click(function() {
+            getCaptcha();
+        })
+    })
+    //获取电话号方法
+    function getTelNum() {
+        var telNum = $("#inputText").val();
+        if (telNum != "") {
+            $("#flag").attr("color", "red");
+            $("#checkbutton").attr("disabled", "disabled");
+            $("#checkbutton").css("background-color", "#969696");
+            if (checkTelNum(telNum)) {
+                $("#flag").attr("color", "green");
+                $("#flag").html("输入正确");
+                $("#checkbutton").removeAttr("disabled");
+                $("#checkbutton").css("background-color", "#4CAF50");
+
+            } else {
+                $("#flag").html("请输入正确的手机号");
+            }
+        }
+        checkinputTime = setTimeout(function() {
+            getTelNum();
+        }, 100);
+    }
+    //判断方法
+    function checkTelNum(telNum) {
+        var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+        if (!myreg.test(telNum)) {
+
+            return false;
+        } else {
+
+            return true;
+        }
+    }
+    //获取验证码并且倒计时
+    function getCaptcha() {
+        clearInterval(checkinputTime); //停止获取手机号计时器
+        var telNum = $("#inputText").val();
+        $.ajax({
+            url : "/user/getTelcode", //请求的url地址
+            dataType : "json", //返回格式为json
+            async : true,
+            data : {
+                "telNum" : telNum
+            }, //参数值
+            type : "post", //请求方式
+            success : function(date) {
+                $("#msgflag").html(" ");
+                if(date=="2"){
+                    $("#msgflag").html("今天已经使用过太多验证码 请使用密码登录");
+                }
+
+            }
+        });
+        $("#checkbutton").attr("disabled", "disabled");
+        $("#checkbutton").css("background-color", "#969696");
+
+        timeOut(60);
+    }
+    //随机数
+    function randomn(n) {
+        if (n > 21) return null
+        return parseInt((Math.random() + 1) * Math.pow(10, n - 1))
+    }
+    //五秒倒计时
+    function timeOut(time) {
+        $("#checkbutton").attr("value", time + "秒后重新获取");
+
+        time = time - 1;
+        checkCaptcha = setTimeout(function() {
+            timeOut(time);
+        }, 1000);
+        if (time == 0) {
+            clearInterval(checkCaptcha);
+            $("#checkbutton").removeAttr("disabled");
+            $("#checkbutton").val("获取验证码");
+            $("#checkbutton").css("background-color", "#4CAF50");
+            getTelNum();
+        }
+    }
+</script>
+
+</body>
+
+</html>

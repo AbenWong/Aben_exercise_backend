@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.userDao">
+    <select id="userlogin" resultType="com.bysj.stsys.model.User">
+        select * from user where USER_STID=#{username} and USER_PASSWORD=#{password}
+    </select>
+    <select id="userloginBytel" resultType="com.bysj.stsys.model.User">
+        select * from user where USER_TEL=#{telNum}
+    </select>
+    <resultMap id="findUserinfmap" type="com.bysj.stsys.model.User">
+        <id property="userTel" column="USER_TEL" />
+        <result property="userStid" column="USER_STID"/>
+        <result property="userPassword" column="USER_PASSWORD"/>
+        <result property="userPhoto" column="USER_PHOTO"/>
+        <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+            <result property="studentName" column="STUDENT_NAME"/>
+        </association>
+    </resultMap>
+    <select id="findUserinf" resultMap="findUserinfmap" >
+        SELECT
+            `user`.USER_TEL,
+            `user`.USER_STID,
+            `user`.USER_PASSWORD,
+            `user`.USER_PHOTO,
+            studentinf.STUDENT_NAME
+        FROM
+            `user`
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where USER_STID=#{userKey}
+
+    </select>
+    <update id="changeTel"  >
+        update user set  USER_TEL=#{newTel} where USER_STID=#{userKey}
+    </update>
+    <update id="changePassword">
+        update user set USER_PASSWORD=#{newPassword} where USER_STID=#{userKey}
+    </update>
+    <update id="updatetouxiang">
+        update user set USER_PHOTO=#{path} where USER_STID=#{userKey}
+    </update>
+    <!--社长查看用户的详细信息-->
+    <resultMap id="searchInf" type="com.bysj.stsys.model.User">
+        <result property="userTel" column="USER_TEL"/>
+        <association property="studentinf" javaType="com.bysj.stsys.model.Studentinf">
+            <result property="studentName" column="STUDENT_NAME"/>
+            <association property="profession" javaType="com.bysj.stsys.model.Profession">
+                <result property="professionName" column="PROFESSION_NAME"/>
+                <association property="collegeinf" javaType="com.bysj.stsys.model.Collegeinf">
+                    <result property="collegeName" column="COLLEGE_NAME"/>
+                </association>
+            </association>
+        </association>
+    </resultMap>
+    <select id="searchUserInf" resultMap="searchInf">
+        SELECT
+            `user`.USER_TEL,
+            studentinf.STUDENT_NAME,
+            profession.PROFESSION_NAME,
+            collegeinf.COLLEGE_NAME
+        FROM
+            `user`
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+                INNER JOIN profession ON studentinf.STUDENT_PROFESSION = profession.PROFESSION_KEY
+                INNER JOIN collegeinf ON profession.PROFESSION_COLLEGE = collegeinf.COLLEGE_KEY
+        where USER_STID=#{userKey}
+    </select>
+    <select id="findpersonList" resultMap="findUserinfmap">
+        SELECT
+            `user`.USER_STID,
+            studentinf.STUDENT_NAME
+        FROM
+            `user`
+                INNER JOIN studentinf ON `user`.USER_STID = studentinf.STUDENT_KEY
+        where studentinf.STUDENT_KEY like  concat(concat(#{xuenian}),'%') and studentinf.STUDENT_PROFESSION=#{profecessKey}
+    </select>
+</mapper>

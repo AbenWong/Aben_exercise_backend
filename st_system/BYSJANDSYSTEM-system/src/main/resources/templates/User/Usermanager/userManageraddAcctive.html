@@ -1,0 +1,322 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>社团成员</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" th:href="@{/Root/vendors/bootstrap/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/themify-icons/css/themify-icons.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/flag-icon-css/css/flag-icon.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/selectFX/css/cs-skin-elastic.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/jqvmap/dist/jqvmap.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/assets/css/style.css}">
+
+</head>
+<script th:src="@{/Root/vendors/jquery/dist/jquery.min.js}" ></script>
+<script th:src="@{/Root/vendors/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/Root/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/Root/assets/js/main.js}"></script>
+
+
+<script th:src="@{/Root/vendors/chart.js/dist/Chart.bundle.min.js}"></script>
+<script th:src="@{/Root/assets/js/dashboard.js}"></script>
+<script th:src="@{/Root/assets/js/widgets.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/dist/jquery.vmap.min.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/dist/maps/jquery.vmap.world.js}"></script>
+
+<script type="text/javascript" src="/myjs/jquery.js" ></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand">社长端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/userManager/jumptoManagerPage"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>社团管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/searchMymanagerSt">社团列表</a></li>
+                        <li><i class="menu-icon fa fa-area-chart"></i><a href="/userManager/searchStpersonList">社团成员及留言</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>活动系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/userManageraddAcctive">申请活动</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/userManageraddAcctiveList">申请记录</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>公告系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/addAnnouncePage">发布公告</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/showAnnounce">我发布的公告</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>加入社团管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/jumpToshowapplicationList">审核加入社团信息</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/jumpToshowapplicationResoultList">审核记录</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>财务系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-fort-awesome"></i><a href="/userManager/jumptoAddtoll">发起收款</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userManager/showmytoll">收款信息</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userManager/showManagerAccount">社团账户</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+
+
+                    <div class="dropdown for-message">
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+
+            <div id="pay-invoice">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h3 class="text-center">申请活动</h3>
+                    </div>
+                    <hr>
+
+                    <div class="form-group text-center">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">申请活动</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label for="stKeyList" class="control-label mb-1">选择发布的社团</label>
+                        <select id="stKeyList"   class="form-control" aria-required="true" aria-invalid="false" >
+                            <option selected="selected" disabled="disabled" style='display: none' value=''>
+                                请选择发布的社团
+                            </option>
+                            <span th:each="userJoinSt:${userJoinSt}">
+                             <option th:if="${userJoinSt.isSz.equals('1')}" th:text="${userJoinSt.stinf.stName}" th:value="${userJoinSt.stpeStid}"></option>
+                        </span>
+                        </select>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">活动标题</label>
+
+                        <input type="text" id="activetitle" placeholder="输入标题 最长30个字符"  class="form-control"></input>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">内容</label>
+
+                        <textarea name="textarea-input" id="activemessage"   rows="6" placeholder="请输入内容" class="form-control"></textarea>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">参与人数</label>
+
+                        <input type="number" id="activemaxpeople" placeholder="输入参与活动人数"  class="form-control"></input>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">活动地点</label>
+
+                        <input type="text" id="activeplace" placeholder="输入活动地点"  class="form-control"></input>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">活动日期</label>
+
+                        <input type="date" id="activedate" placeholder="输入活动日期"  class="form-control"></input>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">活动开始时间</label>
+
+                        <input type="time" id="activetime" placeholder="输入活动开始时间"  class="form-control"></input>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label  class="control-label mb-1">备注</label>
+
+                        <textarea name="textarea-input" id="activeOther"   rows="3" placeholder="请输入内容" class="form-control"></textarea>
+
+                        <span class="help-block field-validation-valid" data-valmsg-for="cc-name" data-valmsg-replace="true"></span>
+                    </div>
+
+
+                    <div>
+                        <button id="addactive"  class="btn btn-lg btn-info btn-block">
+                            <i class="fa fa-lock fa-lg"></i>&nbsp;
+                            <span id="payment-button-amount">发布</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div><!-- .animated -->
+    </div><!-- .content -->
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+
+
+
+
+            </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+
+
+
+
+
+    <!-- Right Panel -->
+
+
+
+    <script type="text/javascript" >
+        $("#addactive").click(function () {
+            addactive();
+        });
+        function addactive() {
+            var actitle=$("#activetitle").val();
+            var accontent=$("#activemessage").val();
+            var acmaxpeoplenum=$("#activemaxpeople").val();
+            var acplace=$("#activeplace").val();
+            var actime=$("#activetime").val();
+            var acdate=$("#activedate").val();
+            var acotherinf=$("#activeOther").val();
+            var stKey = $("#stKeyList option:selected").val();
+            if (actitle != "") {
+                if (accontent != "") {
+                    if (acmaxpeoplenum != "") {
+                        if (acplace != "") {
+                            if (actime != "") {
+                                if (acdate != "") {
+                                    if (acotherinf != "") {
+                                        if (stKey != null) {
+                                            $.ajax({
+                                                url: "/userManager/userManageraddActiveAjax", //请求的url地址
+                                                dataType: "json", //返回格式为json
+                                                async: true,
+                                                data: {
+                                                    "actitle": actitle,
+                                                    "accontent": accontent,
+                                                    "acmaxpeoplenum": acmaxpeoplenum,
+                                                    "acplace": acplace,
+                                                    "actime": actime,
+                                                    "acdate": acdate,
+                                                    "acotherinf": acotherinf,
+                                                    "stKey": stKey
+
+                                                }, //参数值
+                                                type: "post", //请求方式
+                                                success: function (date) {
+                                                    if(date == 1){
+                                                        window.location.href="/userManager/userManageraddAcctiveList";
+                                                    }
+
+                                                }
+                                            });
+                                        } else {
+                                            layer.msg("请选择社团");
+                                        }
+                                    } else {
+                                        layer.msg("请输入备注");
+                                    }
+                                } else {
+                                    layer.msg("请输入日期");
+                                }
+                            } else {
+                                layer.msg("请输入内容");
+                            }
+                        } else {
+                            layer.msg("请输入活动地点");
+                        }
+                    } else {
+                        layer.msg("请输入活动最大人数");
+                    }
+                } else {
+                    layer.msg("请输入活动内容");
+                }
+            } else {
+                layer.msg("请输入标题");
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

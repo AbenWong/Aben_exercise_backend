@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.tollDao">
+    <insert id="addtoll">
+        insert into  toll(toll_key, toll_st, toll_title, toll_message, totll_createtime, totll_lastpaytime,TOTLL_PAYMMONEY)
+         VALUES
+            (#{tollkey},#{stkey},#{tolltitle},#{tollmessage},sysdate(),#{tolllastime},#{money})
+    </insert>
+    <select id="findtoll" resultType="com.bysj.stsys.model.Toll" >
+        SELECT
+            toll.TOLL_KEY,
+            toll.TOLL_ST,
+            toll.TOLL_TITLE,
+            toll.TOLL_MESSAGE,
+            toll.TOTLL_CREATETIME,
+            toll.TOTLL_LASTPAYTIME,
+            toll.TOTLL_PAYMMONEY,
+            toll.TOLL_FLAG
+        FROM
+            toll where TOLL_ST=#{stKey}
+    </select>
+    <update id="closetoll">
+        update toll set TOLL_FLAG=2 where TOLL_KEY=#{tollKey}
+    </update>
+</mapper>

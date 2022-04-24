@@ -1,0 +1,383 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>社团账户</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" th:href="@{/Root/vendors/bootstrap/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/themify-icons/css/themify-icons.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/flag-icon-css/css/flag-icon.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/selectFX/css/cs-skin-elastic.css}">
+    <link rel="stylesheet" th:href="@{/Root/vendors/jqvmap/dist/jqvmap.min.css}">
+    <link rel="stylesheet" th:href="@{/Root/assets/css/style.css}">
+
+</head>
+<script th:src="@{/Root/vendors/jquery/dist/jquery.min.js}" ></script>
+<script th:src="@{/Root/vendors/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/Root/vendors/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/Root/assets/js/main.js}"></script>
+
+
+<script th:src="@{/Root/vendors/chart.js/dist/Chart.bundle.min.js}"></script>
+<script th:src="@{/Root/assets/js/dashboard.js}"></script>
+<script th:src="@{/Root/assets/js/widgets.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/dist/jquery.vmap.min.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js}"></script>
+<script th:src="@{/Root/vendors/jqvmap/dist/maps/jquery.vmap.world.js}"></script>
+
+<script type="text/javascript" src="/myjs/jquery.js" ></script>
+<script type="text/javascript" src="/layer/layer.js"></script>
+<body>
+<!-- 左侧菜单页面公告部分 -->
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div class="navbar-header">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand">社长端</a>
+            <a class="navbar-brand hidden" href="./"><img src="/Root/images/logo2.png" alt="Logo"></a>
+        </div>
+
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/userManager/jumptoManagerPage"> <i class="menu-icon fa fa-dashboard"></i>主页</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>社团管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/searchMymanagerSt">社团列表</a></li>
+                        <li><i class="menu-icon fa fa-area-chart"></i><a href="/userManager/searchStpersonList">社团成员及留言</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>活动系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/userManageraddAcctive">申请活动</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/userManageraddAcctiveList">申请记录</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>公告系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/addAnnouncePage">发布公告</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/showAnnounce">我发布的公告</a></li>
+
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>加入社团管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/jumpToshowapplicationList">审核加入社团信息</a></li>
+                        <li><i class="menu-icon fa fa-line-chart"></i><a href="/userManager/jumpToshowapplicationResoultList">审核记录</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tasks"></i>财务系统管理</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-fort-awesome"></i><a href="/userManager/jumptoAddtoll">发起收款</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userManager/showmytoll">收款信息</a></li>
+                        <li><i class="menu-icon ti-themify-logo"></i><a href="/userManager/showManagerAccount">社团账户</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside><!-- /#left-panel -->
+
+<!-- 左侧菜单界面公共部分 -->
+
+<!-- 开始右侧 -->
+
+<div id="right-panel" class="right-panel">
+
+    <!-- Header-->
+    <header id="header" class="header">
+
+        <div class="header-menu">
+
+            <div class="col-sm-7">
+                <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                <div class="header-left">
+
+
+                    <div class="dropdown for-message">
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-sm-5">
+
+
+            </div>
+        </div>
+
+    </header><!-- /header -->
+    <!-- Header-->
+
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>选择社团</h1>
+                    <form action="/userManager/showAccountinf" id="searchStperson" >
+                        <input type="hidden" th:value="${session.userinf.userStid}" name="UserKey" >
+                        <table>
+                            <tr>
+                                <td>
+                                    <select style="width: 300px; height: 33px " name="Stkey" >
+                                        <option selected="selected" disabled="disabled" style='display: none' value=''>
+                                            请选择查询的社团
+                                        </option>
+                                        <span th:each="userJoinSt:${userJoinSt}">
+                             <option th:if="${userJoinSt.isSz.equals('1')}" th:text="${userJoinSt.stinf.stName}" th:value="${userJoinSt.stpeStid}"></option>
+                        </span>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-success btn-sm" id="findJoinStperson" >查询</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="card-header user-header alt bg-dark"  >
+            <div class="media">
+
+                <div class="media-body">
+                    <h2 class="text-light display-6" th:text="${account.statMoney}"  ></h2>
+                    <p>账户余额</p>
+                    <p th:text="${'账户：'+account.statKey}" ></p>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <input type="hidden" th:value="${session.Stkey}" id="showsearchStkey" >
+    <div id="layerLeaveMessage" style="display: none" >
+        <div class="card-header">
+            <strong>编辑留言</strong>
+        </div>
+        <div class="card-body card-block">
+            <form action="/userSt/addLeaveMessage" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="messageTitle" class=" form-control-label">标题</label></div>
+                    <div class="col-12 col-md-9"><input type="text" id="messageTitle" name="text-input" placeholder="请输入标题" class="form-control" maxlength="20" ><small class="form-text text-muted">标题限长20个字符</small></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="messageinf" class=" form-control-label">留言内容</label></div>
+                    <div class="col-12 col-md-9"><textarea name="textarea-input" id="messageinf" rows="9"  placeholder="请输入--留言内容" class="form-control"></textarea></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div style="display: none" id="showpersoninflayer" >
+        <table align="center" style="width: 100%;height: 30px;border: 1px" >
+            <strong id="title" ></strong>
+            <thead align="center" >
+            <th>姓名</th>
+            <th>是否交款</th>
+            <th>备注</th>
+            </thead>
+            <tbody id="showpersoninf" align="center"  >
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <!-- Right Panel -->
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("button[name='showtollinf']").click(this ,function () {
+                showshowtollinf(this);
+            });
+            $("button[name='showStinfButton']").click(this ,function () {
+                showStByStkey(this);
+            });
+            $("#findJoinStperson").click(function () {
+                jumpJoinStperson();
+            });
+            $("button[name='showPersonInf']").click(this,function () {
+                showPersonInf(this);
+            });
+            $("button[name='managerLoolStuinf']").click(this,function () {
+                managerLoolStuinf(this);
+            });
+
+            var Stkey=$("#showsearchStkey").val();
+            if(Stkey==null||Stkey==""){
+                layer.msg("请选择要查询的社团")
+            }else {
+                $(" select option[value='"+Stkey+"']").attr("selected","selected");  //如果值一样 就选中对应的option,
+
+            }
+
+        });
+        function closetoll(dom) {
+            var tollkey=$(dom).val();
+            //询问框
+
+            var index4=layer.confirm('您确定关闭收款吗 此操作不可撤销哟', {
+                btn: ['确认','取消'] //按钮
+            }, function(){
+                $.ajax({
+                    url : "/userManager/closetoll", //请求的url地址
+                    dataType : "json", //返回格式为json
+                    async : true,
+                    data : {
+                        "tollkey" : $(dom).val()
+                    }, //参数值
+                    type : "post", //请求方式
+                    success : function(date) {
+                        if(date == 1){
+                            layer.msg("成功");
+                            location.reload();
+                        }
+                        else {
+                            layer.msg("失败")
+                        }
+
+                    }
+                });
+            }, function(){
+                layer.close(index4);
+            });
+
+        }
+        function showmessage(dom) {
+            var message=$(dom).val();
+            layer.alert(''+message+'', {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+
+            });
+        }
+        function showshowtollinf(dom) {
+            $.ajax({
+                url : "/userManager/showStpersontoll", //请求的url地址
+                dataType : "json", //返回格式为json
+                async : true,
+                data : {
+                    "tollkey" : $(dom).val()
+                }, //参数值
+                type : "post", //请求方式
+                success : function(date) {
+                    $("#showpersoninf").empty();
+                    $.each(date, function (index, orderinf) {
+                        var studentname=orderinf.user.studentinf.studentName;
+                        var statue=orderinf.orderStatue;
+                        var tianchong;
+                        if(statue=='2'){
+                            $("#showpersoninf").append('<tr><td>'+studentname+'</td><td><font color="green" >已经支付</font></td><td></td></tr>')
+
+                        }
+                        if(statue=='1'){
+                            $("#showpersoninf").append('<tr><td>'+studentname+'</td><td><font color="red" >未支付</font></td><td></td></tr>')
+
+                        }
+
+                    });
+                    var index2 = layer.open({            //打开layer弹出框
+                        type: 1,    //皮肤类型，在skin文件夹中
+                        area: ["800px", "400px"],    //范围大小
+                        title: "交款名单信息",               //定义标题
+                        content:$("#showpersoninflayer"),       //输出的字符串，定义弹出框的html页面
+                        btn: ['确定', '取消'],　　　　//按钮
+                        yes: function (index, layero) { //确定按钮的处理函数
+
+                            layer.close(index2);
+                        },
+                        btn2: function (index, layero) { //取消按钮后的处理函数
+                            layer.close(index2);
+                        },
+                    });
+
+                }
+            });
+        }
+        function managerLoolStuinf(dom) {
+            var userKey=$(dom).val();
+            $.ajax({
+                url : "/userManager/ManagershowPersonInf", //请求的url地址
+                dataType : "json", //返回格式为json
+                async : true,
+                data : {
+                    "userKey" : userKey
+                }, //参数值
+                type : "post", //请求方式
+                success : function(date) {
+                    if(date.studentTel!=null||date.studentTel!=''){
+                        $("#telnum").html(date.studentTel);
+                        $("#stuname").html(date.studentName);
+                        $("#profession").html(date.profession);
+                        $("#college").html(date.college);
+                        var index2 = layer.open({            //打开layer弹出框
+                            type: 1,    //皮肤类型，在skin文件夹中
+                            area: ["800px", "400px"],    //范围大小
+                            title: "个人信息",               //定义标题
+                            content:$("#showStudentInflayer"),       //输出的字符串，定义弹出框的html页面
+                            btn: ['确定', '取消'],　　　　//按钮
+                            yes: function (index, layero) { //确定按钮的处理函数
+
+                                layer.close(index2);
+                            },
+                            btn2: function (index, layero) { //取消按钮后的处理函数
+                                layer.close(index2);
+                            },
+                        });
+                    }else {
+                        layer.msg("查询失败，请见检查网络连接")
+                    }
+
+                }
+            });
+        }
+        function showStByStkey(dom) {
+            window.location.href="/userSt/userShowStinf?stKey="+$(dom).val()+"";
+        }
+        function jumpJoinStperson() {
+
+            $("#searchStperson").submit();
+        }
+
+    </script>
+    <script>
+
+    </script>
+
+</body>
+
+</html>

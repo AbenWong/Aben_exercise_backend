@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.stsys.dao.rootUserDao">
+<select id="rootLogin" resultType="com.bysj.stsys.model.Rootuser">
+    select * from rootuser where rootuser.USERNUMBER=#{username} and rootuser.USERPASSWORD=#{password}
+</select>
+    <select id="rootfaceLogin" resultType="com.bysj.stsys.model.Rootuser">
+        select * from rootuser where rootuser.USERNUMBER=#{username}
+
+    </select>
+    <update id="updatepassword">
+        update  rootuser set rootuser.USERPASSWORD=#{newpassword} where rootuser.USERKEY=#{userkey}
+    </update>
+</mapper>
