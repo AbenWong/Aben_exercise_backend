@@ -1,0 +1,17 @@
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+public interface ScheduledTaskRepository extends JpaRepository<ScheduledTask, Long> {
+
+    Optional<ScheduledTask> findByTaskName(String taskName);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE ScheduledTask t SET t.heartbeatAt = :heartbeatAt WHERE t.taskName = :taskName AND t.executedByIp = :executedByIp")
+    int updateHeartbeat(String taskName, String executedByIp, LocalDateTime heartbeatAt);
+}

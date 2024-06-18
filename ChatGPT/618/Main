@@ -1,0 +1,49 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+@Component
+public class ScheduledTaskRunner {
+
+    @Autowired
+    private TaskLockService taskLockService;
+
+    private final String taskName = "myScheduledTask";
+    private final String instanceIp = IpUtil.getLocalIpv4Address();
+
+    @Scheduled(cron = "0 0 * * * ?") // 每小时执行一次
+    public void executeTask() {
+        if (taskLockService.acquireLock(taskName, instanceIp)) {
+            ScheduledFuture<?> heartbeatFuture = startHeartbeat(taskName, instanceIp);
+            try {
+                // 任务逻辑
+                System.out.println("Executing scheduled task");
+                // 模拟任务执行时间
+                TimeUnit.SECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                stopHeartbeat(heartbeatFuture);
+                taskLockService.releaseLock(taskName, instanceIp);
+            }
+        } else {
+            System.out.println("Lock not acquired, skipping execution");
+        }
+    }
+
+    private ScheduledFuture<?> startHeartbeat(String taskName, String ipAddress) {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.initialize();
+        return scheduler.scheduleAtFixedRate(() -> taskLockService.updateHeartbeat(taskName, ipAddress), 5000); // 每5秒更新一次心跳
+    }
+
+    private void stopHeartbeat(ScheduledFuture<?> future) {
+        if (future != null) {
+            future.cancel(true);
+        }
+    }
+}

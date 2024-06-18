@@ -1,0 +1,61 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class TaskLockService {
+
+    @Autowired
+    private ScheduledTaskRepository taskRepository;
+
+    private static final long HEARTBEAT_TIMEOUT_SECONDS = 60; // 心跳超时时间（秒）
+
+    @Transactional
+    public boolean acquireLock(String taskName, String ipAddress) {
+        Optional<ScheduledTask> optionalTask = taskRepository.findByTaskName(taskName);
+
+        if (optionalTask.isPresent()) {
+            ScheduledTask task = optionalTask.get();
+            if ("RUNNING".equals(task.getStatus()) && task.getHeartbeatAt().isAfter(LocalDateTime.now().minusSeconds(HEARTBEAT_TIMEOUT_SECONDS))) {
+                return false;
+            } else {
+                task.setStatus("RUNNING");
+                task.setExecutedByIp(ipAddress);
+                task.setExecutedAt(LocalDateTime.now());
+                task.setHeartbeatAt(LocalDateTime.now());
+                taskRepository.save(task);
+                return true;
+            }
+        } else {
+            ScheduledTask newTask = new ScheduledTask();
+            newTask.setTaskName(taskName);
+            newTask.setStatus("RUNNING");
+            newTask.setExecutedByIp(ipAddress);
+            newTask.setExecutedAt(LocalDateTime.now());
+            newTask.setHeartbeatAt(LocalDateTime.now());
+            taskRepository.save(newTask);
+            return true;
+        }
+    }
+
+    @Transactional
+    public void releaseLock(String taskName, String ipAddress) {
+        Optional<ScheduledTask> optionalTask = taskRepository.findByTaskName(taskName);
+
+        if (optionalTask.isPresent()) {
+            ScheduledTask task = optionalTask.get();
+            if (ipAddress.equals(task.getExecutedByIp())) {
+                task.setStatus("COMPLETED");
+                taskRepository.save(task);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateHeartbeat(String taskName, String ipAddress) {
+        taskRepository.updateHeartbeat(taskName, ipAddress, LocalDateTime.now());
+    }
+}

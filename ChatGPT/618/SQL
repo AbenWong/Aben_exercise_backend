@@ -1,0 +1,10 @@
+CREATE TABLE scheduled_tasks (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    task_name VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    executed_by_ip VARCHAR(50) NOT NULL,
+    executed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (task_name)
+);
+
+ALTER TABLE scheduled_tasks ADD COLUMN heartbeat_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
