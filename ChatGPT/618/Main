@@ -15,14 +15,13 @@ public class ScheduledTaskRunner {
     private final String taskName = "myScheduledTask";
     private final String instanceIp = IpUtil.getLocalIpv4Address();
 
-    @Scheduled(cron = "0 0 * * * ?") // 每小时执行一次
+    @Scheduled(cron = "0 0 * * * ?")
     public void executeTask() {
         if (taskLockService.acquireLock(taskName, instanceIp)) {
             ScheduledFuture<?> heartbeatFuture = startHeartbeat(taskName, instanceIp);
             try {
                 // 任务逻辑
                 System.out.println("Executing scheduled task");
-                // 模拟任务执行时间
                 TimeUnit.SECONDS.sleep(30);
             } catch (InterruptedException e) {
                 e.printStackTrace();

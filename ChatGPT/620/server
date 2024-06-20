@@ -1,0 +1,30 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+public class TimeService {
+
+    @Autowired
+    private TimeMapper timeMapper;
+
+    private LocalDateTime lastTimeValue = null;
+
+    public String checkTimeChange() {
+        LocalDateTime currentTimeValue = timeMapper.findLatestTime();
+
+        if (currentTimeValue == null) {
+            return "No time value in the database.";
+        }
+
+        if (lastTimeValue == null || !currentTimeValue.equals(lastTimeValue)) {
+            String response = "Current time: " + currentTimeValue +
+                              ", Previous time: " + (lastTimeValue != null ? lastTimeValue : "None");
+            lastTimeValue = currentTimeValue;
+            return response;
+        } else {
+            return "Time value has not changed.";
+        }
+    }
+}
