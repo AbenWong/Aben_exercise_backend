@@ -1,0 +1,6 @@
+public class ScheduleConfig {
+    private Integer id;
+    private String cronExpression;
+
+    // Getters and Setters
+}

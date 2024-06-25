@@ -1,0 +1,17 @@
+@Service
+public class CronExpressionMonitor {
+
+    @Autowired
+    private ScheduleConfigMapper scheduleConfigMapper;
+
+    @Autowired
+    private DynamicScheduleTask dynamicScheduleTask;
+
+    @Scheduled(fixedRate = 60000)  // 每分钟检查一次
+    public void checkForCronExpressionChange() {
+        String currentCronExpression = scheduleConfigMapper.getCronExpressionById(1);
+        if (!currentCronExpression.equals(dynamicScheduleTask.getCronExpression())) {
+            dynamicScheduleTask.updateCronExpression(currentCronExpression);
+        }
+    }
+}

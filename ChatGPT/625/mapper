@@ -1,0 +1,8 @@
+@Mapper
+public interface ScheduleConfigMapper {
+    @Select("SELECT cron_expression FROM schedule_config WHERE id = #{id}")
+    String getCronExpressionById(@Param("id") Integer id);
+
+    @Update("UPDATE schedule_config SET cron_expression = #{cronExpression} WHERE id = #{id}")
+    void updateCronExpressionById(@Param("id") Integer id, @Param("cronExpression") String cronExpression);
+}

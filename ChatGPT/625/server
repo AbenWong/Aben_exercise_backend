@@ -1,0 +1,56 @@
+@Service
+public class DynamicScheduleTask implements SchedulingConfigurer {
+
+    @Autowired
+    private ScheduleConfigMapper scheduleConfigMapper;
+
+    private String cronExpression;
+
+    private ScheduledFuture<?> scheduledFuture;
+
+    private final ScheduledTaskRegistrar scheduledTaskRegistrar;
+
+    @Autowired
+    public DynamicScheduleTask(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+        this.scheduledTaskRegistrar = scheduledTaskRegistrar;
+    }
+
+    @PostConstruct
+    public void init() {
+        // 从数据库中获取初始的cron表达式
+        cronExpression = scheduleConfigMapper.getCronExpressionById(1);
+        // 启动定时任务
+        scheduleTask();
+    }
+
+    public void scheduleTask() {
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(false);
+        }
+        Runnable task = () -> {
+            // 定时任务逻辑
+            System.out.println("Scheduled task executed at " + LocalDateTime.now());
+        };
+        Trigger trigger = triggerContext -> {
+            CronTrigger cronTrigger = new CronTrigger(cronExpression);
+            return cronTrigger.nextExecutionTime(triggerContext);
+        };
+        scheduledFuture = scheduledTaskRegistrar.getScheduler().schedule(task, trigger);
+    }
+
+    public void updateCronExpression(String newCronExpression) {
+        this.cronExpression = newCronExpression;
+        // 更新数据库中的值
+        scheduleConfigMapper.updateCronExpressionById(1, newCronExpression);
+        // 重新调度任务
+        scheduleTask();
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        // 注册动态任务
+    }
+}
+public String getCronExpression() {
+    return cronExpression;
+}
