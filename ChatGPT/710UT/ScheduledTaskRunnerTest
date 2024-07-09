@@ -1,0 +1,92 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Mockito.*;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@EnableScheduling
+public class ScheduledTaskRunnerTest {
+
+    @Mock
+    private TaskLockService taskLockService;
+
+    @InjectMocks
+    private ScheduledTaskRunner scheduledTaskRunner;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        scheduledTaskRunner = new ScheduledTaskRunner(taskLockService);
+    }
+
+    @Test
+    public void testExecuteTaskWhenLockAcquired() throws Exception {
+        // Mock the lock service
+        when(taskLockService.acquireLock(anyString(), anyString())).thenReturn(true);
+        when(taskLockService.checkLockExpiration(anyString())).thenReturn(false);
+
+        // Run the task in a separate thread
+        Future<?> future = executorService.submit(() -> scheduledTaskRunner.executeTask());
+
+        // Simulate task running and not expiring
+        TimeUnit.SECONDS.sleep(5);
+        verify(taskLockService, times(1)).acquireLock(anyString(), anyString());
+        verify(taskLockService, times(1)).releaseLock(anyString(), anyString());
+
+        // Ensure the task is completed
+        future.get();
+    }
+
+    @Test
+    public void testExecuteTaskWhenLockExpired() throws Exception {
+        // Mock the lock service
+        when(taskLockService.acquireLock(anyString(), anyString())).thenReturn(true);
+        when(taskLockService.checkLockExpiration(anyString())).thenReturn(true);
+
+        // Run the task in a separate thread
+        Future<?> future = executorService.submit(() -> scheduledTaskRunner.executeTask());
+
+        // Simulate task running and then expiring
+        TimeUnit.SECONDS.sleep(5);
+        verify(taskLockService, times(1)).acquireLock(anyString(), anyString());
+        verify(taskLockService, times(1)).checkLockExpiration(anyString());
+
+        // Ensure the task is interrupted
+        future.cancel(true);
+
+        // Verify that the task was interrupted
+        verify(taskLockService, times(1)).releaseLock(anyString(), anyString());
+    }
+
+    @Test
+    public void testExecuteTaskWhenLockNotAcquired() throws Exception {
+        // Mock the lock service
+        when(taskLockService.acquireLock(anyString(), anyString())).thenReturn(false);
+
+        // Run the task in a separate thread
+        Future<?> future = executorService.submit(() -> scheduledTaskRunner.executeTask());
+
+        // Ensure the task did not run
+        verify(taskLockService, times(1)).acquireLock(anyString(), anyString());
+        verify(taskLockService, never()).releaseLock(anyString(), anyString());
+
+        // Ensure the task is completed
+        future.get();
+    }
+}

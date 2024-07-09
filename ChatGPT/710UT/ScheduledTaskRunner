@@ -1,0 +1,68 @@
+为测试目的，需要为 ScheduledTaskRunner 添加一个构造函数以注入 TaskLockService：
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+@Component
+public class ScheduledTaskRunner {
+
+    private final TaskLockService taskLockService;
+    private final String taskName = "myScheduledTask";
+    private final String instanceIp = IpUtil.getLocalIpv4Address();
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    @Autowired
+    public ScheduledTaskRunner(TaskLockService taskLockService) {
+        this.taskLockService = taskLockService;
+    }
+
+    @Scheduled(cron = "0 0 * * * ?")
+    public void executeTask() {
+        // 检查并释放过期的锁
+        if (taskLockService.checkLockExpiration(taskName)) {
+            System.out.println("Lock expired. Task not executed.");
+            return;
+        }
+
+        if (taskLockService.acquireLock(taskName, instanceIp)) {
+            Future<?> future = executorService.submit(() -> {
+                try {
+                    // 任务逻辑
+                    System.out.println("Executing scheduled task");
+                    for (int i = 0; i < 60; i++) { // 模拟长时间任务
+                        if (Thread.currentThread().isInterrupted()) {
+                            throw new InterruptedException("Task was interrupted");
+                        }
+                        TimeUnit.SECONDS.sleep(1);
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println("Task was interrupted: " + e.getMessage());
+                } finally {
+                    taskLockService.releaseLock(taskName, instanceIp);
+                }
+            });
+
+            executorService.submit(() -> {
+                while (true) {
+                    if (taskLockService.checkLockExpiration(taskName)) {
+                        future.cancel(true);
+                        break;
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(1); // 检查频率
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            });
+        } else {
+            System.out.println("Lock not acquired, skipping execution");
+        }
+    }
+}

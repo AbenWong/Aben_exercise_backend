@@ -1,0 +1,20 @@
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>2.5.4</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>2.5.4</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>3.9.0</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+为定时任务编写单元测试需要模拟任务执行的环境，确保在测试过程中不实际触发定时任务的调度。可以使用 Spring 的 @MockBean 注解来模拟依赖项，并使用 JUnit 和 Mockito 进行测试。下面是一个示例：
