@@ -1,0 +1,16 @@
+import org.apache.ibatis.annotations.*;
+
+import java.util.Optional;
+
+@Mapper
+public interface ScheduledTaskMapper {
+    @Select("SELECT * FROM scheduled_tasks WHERE task_name = #{taskName}")
+    Optional<ScheduledTask> findByTaskName(String taskName);
+
+    @Insert("INSERT INTO scheduled_tasks (task_name, status, executed_by_ip, executed_at) VALUES (#{taskName}, #{status}, #{executedByIp}, #{executedAt})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void insert(ScheduledTask scheduledTask);
+
+    @Update("UPDATE scheduled_tasks SET status = #{status}, executed_by_ip = #{executedByIp}, executed_at = #{executedAt} WHERE task_name = #{taskName}")
+    void update(ScheduledTask scheduledTask);
+}

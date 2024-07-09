@@ -1,0 +1,79 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class TaskLockService {
+
+    @Autowired
+    private ScheduledTaskMapper taskMapper;
+
+    private static final long LOCK_EXPIRATION_SECONDS = 60; // 锁的有效时间（秒）
+
+    @Transactional
+    public boolean acquireLock(String taskName, String ipAddress) {
+        Optional<ScheduledTask> optionalTask = taskMapper.findByTaskName(taskName);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (optionalTask.isPresent()) {
+            ScheduledTask task = optionalTask.get();
+
+            // 如果任务状态是RUNNING并且锁未过期，则认为任务正在执行中，返回false
+            if ("RUNNING".equals(task.getStatus()) && task.getExecutedAt().isAfter(now.minusSeconds(LOCK_EXPIRATION_SECONDS))) {
+                System.out.println("Lock not acquired, it is still valid until " + task.getExecutedAt().plusSeconds(LOCK_EXPIRATION_SECONDS));
+                return false;
+            } else {
+                // 否则，更新任务状态和锁的到期时间
+                task.setStatus("RUNNING");
+                task.setExecutedByIp(ipAddress);
+                task.setExecutedAt(now);
+                taskMapper.update(task);
+                return true;
+            }
+        } else {
+            // 如果任务记录不存在，则创建新的任务记录
+            ScheduledTask newTask = new ScheduledTask();
+            newTask.setTaskName(taskName);
+            newTask.setStatus("RUNNING");
+            newTask.setExecutedByIp(ipAddress);
+            newTask.setExecutedAt(now);
+            taskMapper.insert(newTask);
+            return true;
+        }
+    }
+
+    @Transactional
+    public void releaseLock(String taskName, String ipAddress) {
+        Optional<ScheduledTask> optionalTask = taskMapper.findByTaskName(taskName);
+
+        if (optionalTask.isPresent()) {
+            ScheduledTask task = optionalTask.get();
+            if (ipAddress.equals(task.getExecutedByIp())) {
+                task.setStatus("COMPLETED");
+                taskMapper.update(task);
+            }
+        }
+    }
+
+    @Transactional
+    public boolean checkLockExpiration(String taskName) {
+        Optional<ScheduledTask> optionalTask = taskMapper.findByTaskName(taskName);
+
+        if (optionalTask.isPresent()) {
+            ScheduledTask task = optionalTask.get();
+            LocalDateTime now = LocalDateTime.now();
+
+            if ("RUNNING".equals(task.getStatus()) && task.getExecutedAt().isBefore(now.minusSeconds(LOCK_EXPIRATION_SECONDS))) {
+                System.out.println("The lock for task " + taskName + " has expired.");
+                task.setStatus("EXPIRED");
+                taskMapper.update(task);
+                return true;
+            }
+        }
+        return false;
+    }
+}

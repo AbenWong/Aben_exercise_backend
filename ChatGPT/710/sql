@@ -1,0 +1,7 @@
+CREATE TABLE scheduled_tasks (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    task_name VARCHAR(255) NOT NULL UNIQUE,
+    status VARCHAR(50) NOT NULL,
+    executed_by_ip VARCHAR(50) NOT NULL,
+    executed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

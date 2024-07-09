@@ -1,0 +1,11 @@
+import java.time.LocalDateTime;
+
+public class ScheduledTask {
+    private Long id;
+    private String taskName;
+    private String status;
+    private String executedByIp;
+    private LocalDateTime executedAt;
+
+    // Getters and Setters
+}
