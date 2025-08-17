@@ -1,0 +1,439 @@
+现在有个由springboot开发的定时任务，分为今日任务，历史任务，housekeeping任务，断点续传任务，动态定时任务，这些任务已经开发完成，现在需要结合splunk需要增加SLA场景。初始化任务是在任务一旦部署就执行，如果执行失败才执行xmatter，而执行成功只输出日志。今日任务，历史任务的定时任务在凌晨0点0分1秒开始执行，如果在凌晨2点前可以有完成任务后的日志输出不需要执行xmatter，如果没有完成需要splunk触发预警发送xmatter。判断动态任务开始时间是否为凌晨两点前，如何是，判断任务成功结束时间是否也是在两点前，如果成功是在两点前那么不使用xmatter 通知，如果在两点前没有收到任务成功那么触发xmatter，如果是在两点后开始动态任务，那么只在运行失败的情况下触发xmatter，如果运行成功不需要触发。hosuekeeping，只有在未完成的情况下触发。断点续传任务，与动态任务的sla模式一样。
+根据您的需求，我将设计一个完整的SLA监控方案，覆盖所有任务类型（初始化、定时、动态、housekeeping、断点续传），并确保Splunk能精确触发xMatters预警。以下是详细实现方案：
+
+1. 统一日志规范设计（Spring Boot侧）
+公共日志格式
+java
+// 所有任务共享的日志格式
+public void logTaskEvent(String taskType, String taskName, String status, 
+                         Instant start, Instant end, String error) {
+    String logMsg = String.format(
+        "type=TASK_EVENT, task_type=%s, name=%s, status=%s, start=%s, end=%s",
+        taskType, taskName, status, start, end
+    );
+    
+    if ("FAILED".equals(status)) {
+        log.error(logMsg + ", error={}", error);
+    } else {
+        log.info(logMsg);
+    }
+}
+
+// 动态任务元数据记录
+private void logDynamicMeta(String taskType, String taskName, Instant scheduledTime) {
+    ZonedDateTime beijingTime = scheduledTime.atZone(ZoneId.of("Asia/Shanghai"));
+    boolean before2AM = beijingTime.getHour() < 2;
+    
+    log.info("type=TASK_META, task_type={}, name={}, before_2am={}, scheduled={}", 
+             taskType, taskName, before2AM, scheduledTime);
+}
+各任务类型实现
+java
+// 初始化任务 (initTask)
+@PostConstruct
+public void initTask() {
+    Instant start = Instant.now();
+    try {
+        // 初始化逻辑...
+        logTaskEvent("INIT", "initTask", "SUCCESS", start, Instant.now(), null);
+    } catch (Exception e) {
+        logTaskEvent("INIT", "initTask", "FAILED", start, Instant.now(), e.getMessage());
+    }
+}
+
+// 定时任务 (dailyTask/historyTask)
+@Scheduled(cron = "1 0 0 * * ?")
+public void scheduledTask(String taskName) {
+    Instant start = Instant.now();
+    try {
+        // 业务逻辑...
+        logTaskEvent("SCHEDULED", taskName, "SUCCESS", start, Instant.now(), null);
+    } catch (Exception e) {
+        logTaskEvent("SCHEDULED", taskName, "FAILED", start, Instant.now(), e.getMessage());
+    }
+}
+
+// 动态任务 (dynamicTask)
+public void executeDynamicTask(Instant scheduledTime) {
+    logDynamicMeta("DYNAMIC", "dynamicTask", scheduledTime);
+    
+    Instant start = Instant.now();
+    try {
+        // 业务逻辑...
+        logTaskEvent("DYNAMIC", "dynamicTask", "SUCCESS", start, Instant.now(), null);
+    } catch (Exception e) {
+        logTaskEvent("DYNAMIC", "dynamicTask", "FAILED", start, Instant.now(), e.getMessage());
+    }
+}
+
+// 断点续传任务 (resumeTask)
+public void executeResumeTask(Instant scheduledTime) {
+    logDynamicMeta("RESUME", "resumeTask", scheduledTime);
+    
+    Instant start = Instant.now();
+    try {
+        // 业务逻辑...
+        logTaskEvent("RESUME", "resumeTask", "SUCCESS", start, Instant.now(), null);
+    } catch (Exception e) {
+        logTaskEvent("RESUME", "resumeTask", "FAILED", start, Instant.now(), e.getMessage());
+    }
+}
+
+// Housekeeping任务
+@Scheduled(cron = "0 0 3 * * ?") // 每天凌晨3点执行
+public void housekeepingTask() {
+    Instant start = Instant.now();
+    try {
+        // 清理逻辑...
+        logTaskEvent("HOUSEKEEPING", "housekeepingTask", "SUCCESS", start, Instant.now(), null);
+    } catch (Exception e) {
+        logTaskEvent("HOUSEKEEPING", "housekeepingTask", "FAILED", start, Instant.now(), e.getMessage());
+    }
+}
+2. Splunk监控策略矩阵
+任务类型	触发xMatters的条件
+初始化任务	任务状态为FAILED
+定时任务	00:00:01开始的任务在02:00:00前未完成（无TASK_END日志）或状态为FAILED
+动态任务	1. 02:00前开始的任务：02:00前未收到成功日志
+2. 02:00后开始的任务：状态为FAILED
+断点续传任务	同动态任务规则
+Housekeeping	任务未完成（无TASK_END日志）
+3. Splunk监控查询设计
+初始化任务监控（实时）
+sql
+index=your_index "type=TASK_EVENT" task_type="INIT" status="FAILED"
+| stats count by name, start, end, error
+| where count > 0
+定时任务监控（每日02:05运行）
+sql
+index=your_index ("type=TASK_EVENT" task_type="SCHEDULED" name IN ("dailyTask", "historyTask")) 
+| eval start_time=strptime(start, "%Y-%m-%dT%H:%M:%S.%QZ")
+| eval end_time=if(isnotnull(end), strptime(end, "%Y-%m-%dT%H:%M:%S.%QZ"), null)
+| where start_time >= relative_time(now(), "@d") 
+| stats 
+    earliest(start_time) as start_epoch,
+    latest(end_time) as end_epoch,
+    latest(status) as final_status
+    by name
+| eval 
+    deadline=strptime(strftime(now(), "%Y-%m-%d 02:00:00"), "%Y-%m-%d %H:%M:%S"),
+    is_completed=if(isnotnull(end_epoch), 1, 0),
+    is_on_time=if(end_epoch <= deadline, 1, 0)
+| where 
+    (is_completed=0 AND now() > deadline)  // 未完成
+    OR final_status="FAILED"               // 失败
+| eval alert_reason=case(
+    is_completed=0, "任务未完成",
+    final_status="FAILED", "任务失败"
+)
+| table name, start_epoch, end_epoch, final_status, alert_reason
+动态任务 & 断点续传监控（每10分钟运行）
+sql
+index=your_index (("type=TASK_EVENT" task_type IN ("DYNAMIC", "RESUME")) 
+  OR ("type=TASK_META" task_type IN ("DYNAMIC", "RESUME")))
+| eval meta_time=if(eventtype=="TASK_META", _time, null)
+| eval start_time=if(eventtype=="TASK_EVENT", strptime(start, "%Y-%m-%dT%H:%M:%S.%QZ"), null)
+| eval end_time=if(eventtype=="TASK_EVENT" AND isnotnull(end), strptime(end, "%Y-%m-%dT%H:%M:%S.%QZ"), null)
+| eval before_2am=if(eventtype=="TASK_META", before_2am, null)
+| eval status=if(eventtype=="TASK_EVENT", status, null)
+| stats 
+    earliest(meta_time) as meta_epoch,
+    latest(before_2am) as before_2am,
+    earliest(start_time) as start_epoch,
+    latest(end_time) as end_epoch,
+    latest(status) as final_status
+    by task_type, name
+| where isnotnull(meta_epoch)  // 确保有元数据
+| eval 
+    deadline_2am=relative_time(meta_epoch, "@d+2h"),
+    current_status=case(
+        isnotnull(end_epoch) AND final_status=="SUCCESS", "SUCCESS",
+        isnotnull(end_epoch) AND final_status=="FAILED", "FAILED",
+        now() > deadline_2am AND before_2am=="true", "MISSED_DEADLINE",
+        1=1, "RUNNING"
+    )
+| where 
+    (before_2am=="true" AND current_status != "SUCCESS" AND now() > deadline_2am) 
+    OR (before_2am=="false" AND current_status == "FAILED")
+| eval alert_reason=case(
+    before_2am=="true" AND current_status=="MISSED_DEADLINE", "未在凌晨2点前完成",
+    before_2am=="true" AND current_status=="FAILED", "凌晨2点前任务失败",
+    before_2am=="false" AND current_status=="FAILED", "凌晨2点后任务失败"
+)
+| table task_type, name, meta_epoch, start_epoch, end_epoch, before_2am, current_status, alert_reason
+Housekeeping任务监控（每日08:00运行）
+sql
+index=your_index "type=TASK_EVENT" task_type="HOUSEKEEPING"
+| eval start_time=strptime(start, "%Y-%m-%dT%H:%M:%S.%QZ")
+| where start_time >= relative_time(now(), "-1d") 
+| stats 
+    latest(end) as last_end,
+    latest(status) as last_status
+    by name
+| where isnull(last_end)  // 未完成
+| eval alert_reason="任务未完成"
+| table name, start_time, alert_reason
+4. xMatters预警配置
+json
+{
+  "alert_name": "SLA_VIOLATION",
+  "task_type": "{{task_type}}",
+  "task_name": "{{name}}",
+  "alert_reason": "{{alert_reason}}",
+  "start_time": "{{if isnotnull(start_epoch)}} {{strftime(start_epoch, "%Y-%m-%d %H:%M:%S")}} {{end}}",
+  "end_time": "{{if isnotnull(end_epoch)}} {{strftime(end_epoch, "%Y-%m-%d %H:%M:%S")}} {{end}}",
+  "severity": "{{if contains(alert_reason, "失败")}}CRITICAL{{else}}MAJOR{{end}}",
+  "timestamp": "{{strftime(now(), "%Y-%m-%d %H:%M:%S")}}"
+}
+5. 动态任务执行保障
+java
+// 动态任务执行器
+public class DynamicTaskExecutor {
+    private static final ZoneId BEIJING_ZONE = ZoneId.of("Asia/Shanghai");
+    
+    public void executeWithSLA(Runnable task, String taskName, Instant scheduledTime) {
+        // 记录元数据
+        logDynamicMeta(taskName.startsWith("dynamic") ? "DYNAMIC" : "RESUME", 
+                      taskName, scheduledTime);
+        
+        ZonedDateTime beijingTime = scheduledTime.atZone(BEIJING_ZONE);
+        boolean before2AM = beijingTime.getHour() < 2;
+        Instant start = Instant.now();
+        
+        try {
+            // 凌晨2点前的任务添加超时控制
+            if (before2AM) {
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Future<?> future = executor.submit(task);
+                
+                try {
+                    // 计算到凌晨2点的剩余时间
+                    ZonedDateTime twoAM = beijingTime.withHour(2).withMinute(0).withSecond(0);
+                    if (beijingTime.isAfter(twoAM)) {
+                        twoAM = twoAM.plusDays(1);
+                    }
+                    
+                    long timeout = Duration.between(Instant.now(), twoAM.toInstant())
+                                          .minusMinutes(5) // 5分钟缓冲
+                                          .toMillis();
+                    
+                    if (timeout > 0) {
+                        future.get(timeout, TimeUnit.MILLISECONDS);
+                    } else {
+                        log.warn("Task {} started too close to 2AM, running without timeout", taskName);
+                        task.run();
+                    }
+                } catch (TimeoutException e) {
+                    log.error("Task {} timed out before 2AM cutoff", taskName);
+                    future.cancel(true);
+                } finally {
+                    executor.shutdown();
+                }
+            } else {
+                // 凌晨2点后任务直接执行
+                task.run();
+            }
+            
+            logTaskEvent(taskName.startsWith("dynamic") ? "DYNAMIC" : "RESUME", 
+                         taskName, "SUCCESS", start, Instant.now(), null);
+        } catch (Exception e) {
+            logTaskEvent(taskName.startsWith("dynamic") ? "DYNAMIC" : "RESUME", 
+                         taskName, "FAILED", start, Instant.now(), e.getMessage());
+        }
+    }
+}
+6. 时区安全处理方案
+图表
+代码
+graph TD
+    A[任务开始] --> B{北京时间是否<2:00?}
+    B -->|是| C[标记before_2am=true]
+    B -->|否| D[标记before_2am=false]
+    C --> E[设置严格超时控制]
+    D --> F[无超时控制]
+    E --> G[执行任务]
+    F --> G
+    G --> H{任务完成?}
+    H -->|是| I[记录TASK_END]
+    H -->|超时/失败| J[记录异常状态]
+    I --> K{Splunk监控}
+    J --> K
+    K -->|before_2am=true| L{2点前成功完成?}
+    K -->|before_2am=false| M{任务失败?}
+    L -->|是| N[无预警]
+    L -->|否| O[触发xMatters]
+    M -->|是| O
+    M -->|否| N
+
+
+git学习资源：
+https://github.com/liumengyu12321/Vue3-Project/tree/master
+https://github.com/byte-scheduler/admin-x-web
+https://cn.vuejs.org/guide/introduction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7. 预警场景测试用例
+任务类型	场景描述	预期结果
+初始化任务	部署时失败	触发预警
+定时任务	00:10开始，01:59成功完成	无预警
+定时任务	00:10开始，02:05仍未完成	触发预警
+定时任务	00:10开始，01:30失败	触发预警
+动态任务	01:30开始，01:55成功完成	无预警
+动态任务	01:30开始，02:05成功完成	触发预警
+动态任务	01:30开始，任务失败	触发预警
+动态任务	03:00开始，03:30成功完成	无预警
+动态任务	03:00开始，任务失败	触发预警
+断点续传	01:45开始，01:58成功完成	无预警
+断点续传	01:45开始，02:10成功完成	触发预警
+Housekeeping	03:00开始，08:00仍未完成	触发预警
+Housekeeping	03:00开始，04:00成功完成	无预警
+8. 性能优化方案
+sql
+# 高效时间分桶查询
+index=your_index 
+| eval date_key=strftime(_time, "%Y%m%d")
+| eval hour_key=strftime(_time, "%H")
+| eval task_key=task_type+"-"+name
+| stats 
+    earliest(eval(if(type=="TASK_START", _time, null))) as start_time,
+    latest(eval(if(type=="TASK_END", _time, null))) as end_time,
+    latest(status) as final_status,
+    latest(before_2am) as before_2am
+    by date_key, task_key
+| where start_time >= relative_time(now(), "@d") 
+| eval 
+    start_hour = strftime(start_time, "%H"),
+    end_hour = if(isnotnull(end_time), strftime(end_time, "%H"), null)
+| eval violation = case(
+    task_type IN ("dailyTask", "historyTask") AND 
+        (isnull(end_time) OR final_status="FAILED") AND 
+        strftime(now(), "%H") > "02", 1,
+        
+    task_type IN ("DYNAMIC", "RESUME") AND before_2am=="true" AND 
+        (isnull(end_time) OR final_status="FAILED") AND 
+        strftime(now(), "%H") > "02", 1,
+        
+    task_type IN ("DYNAMIC", "RESUME") AND before_2am=="false" AND 
+        final_status="FAILED", 1,
+        
+    task_type=="HOUSEKEEPING" AND isnull(end_time) AND 
+        (now() - start_time) > 4*3600, 1,
+        
+    1=1, 0
+)
+| where violation=1
+| table task_key, start_time, end_time, final_status, violation_reason
+9. 动态任务控制台设计
+typescript
+// React组件示例
+const TaskSlaDashboard = () => {
+  const [tasks, setTasks] = useState([]);
+  
+  useEffect(() => {
+    // 从后端API获取任务状态
+    fetchTaskStatus().then(data => setTasks(data));
+  }, []);
+  
+  return (
+    <div className="sla-dashboard">
+      <TaskTypePanel 
+        title="凌晨2点前任务" 
+        tasks={tasks.filter(t => t.before2AM)}
+        columns={[
+          { id: 'name', label: '任务名称' },
+          { id: 'scheduled', label: '计划时间' },
+          { id: 'status', label: '状态' },
+          { id: 'slaStatus', label: 'SLA状态' }
+        ]}
+      />
+      
+      <TaskTypePanel
+        title="凌晨2点后任务"
+        tasks={tasks.filter(t => !t.before2AM)}
+        columns={[
+          { id: 'name', label: '任务名称' },
+          { id: 'scheduled', label: '计划时间' },
+          { id: 'status', label: '状态' },
+          { id: 'actions', label: '操作' }
+        ]}
+      />
+      
+      <SlaTimelineChart tasks={tasks} />
+    </div>
+  );
+};
+10. 部署与维护建议
+日志采样：
+
+开发环境：记录所有DEBUG级别日志
+
+生产环境：仅记录INFO及以上级别，但确保所有TASK_EVENT/TASK_META都被记录
+
+Splunk索引优化：
+
+conf
+# props.conf
+[spring_boot_logs]
+TIME_PREFIX = start=
+TIME_FORMAT = %Y-%m-%dT%H:%M:%S.%QZ
+MAX_TIMESTAMP_LOOKAHEAD = 30
+预警分级：
+
+P0：定时任务未完成
+
+P1：动态/续传任务超时
+
+P2：Housekeeping未完成
+
+P3：初始化任务失败
+
+自动恢复机制：
+
+java
+@Scheduled(cron = "0 */15 * * * ?") // 每15分钟检查一次
+public void checkStuckTasks() {
+    // 查询超时未完成的任务
+    List<Task> stuckTasks = taskRepository.findStuckTasks();
+    
+    for (Task task : stuckTasks) {
+        if (task.getType().equals("HOUSEKEEPING")) {
+            // 重新触发Housekeeping
+            housekeepingService.retryTask(task);
+        } else if (task.getType().equals("DYNAMIC") || task.getType().equals("RESUME")) {
+            // 记录预警但不自动重试
+            alertService.sendWarning(task);
+        }
+    }
+}
+此方案完全覆盖您的需求：
+
+初始化任务：仅失败时触发预警
+
+定时任务：严格凌晨2点前完成要求
+
+动态任务：区分凌晨2点前/后执行场景
+
+断点续传：复用动态任务规则
+
+Housekeeping：仅未完成时触发预警
+
+所有任务类型都有独立的监控策略，确保SLA违规能被及时检测并通过xMatters通知，同时避免了不必要的误报。

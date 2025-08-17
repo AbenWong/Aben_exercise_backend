@@ -19,6 +19,8 @@ public class TaskLockService {
 
         LocalDateTime now = LocalDateTime.now();
 
+        
+
         if (optionalTask.isPresent()) {
             ScheduledTask task = optionalTask.get();
 

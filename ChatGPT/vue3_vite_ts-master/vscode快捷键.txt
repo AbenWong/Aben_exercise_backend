@@ -1,0 +1,5 @@
+代码格式化：ctrl+shift+F
+代码块折叠：ctrl+shift+[
+代码块展开：ctrl+shift+]
+
+自定义行删除：ctrl+shift+Delete
